@@ -4,6 +4,7 @@ import "dotenv/config";
 import bcrypt from "bcrypt";
 import { nanoid } from 'nanoid';
 import jwt from "jsonwebtoken";
+import cors from "cors"; 
 
 // Schema
 import User from "./Schema/User.js";
@@ -16,6 +17,7 @@ let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for e
 let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
 server.use(express.json()); 
+server.use(cors()); // enable to server access the data from any route
 
 mongoose.connect(process.env.MONGODB_URI, { autoIndex: true})
 
@@ -38,48 +40,6 @@ const generateUsername = async (email)=>{
 }
 
 // REGISTER ROUTE
-// server.post("/signup", (req, res)=>{
-//     // console.log(req.body)
-//     const {fullname, email, password} = req.body;
-
-//     // Validating the data coming from frontend
-//     if(!fullname || !email || !password){
-//         return res.status(403).json({"error": "All fields are required"})
-//     }else{
-//         if(fullname.length < 3){
-//             return res.status(403).json({"error":"Fullname must be at least 3 letters long"})
-//         }
-//         if(!email.length){
-//             return res.status(403).json({"error":"Enter Email"})
-//         }
-    
-//         if(!emailRegex.test(email)){
-//             return res.status(403).json({"error":"Email is invalid"})
-//         }
-//         if(!passwordRegex.test(password)){
-//             return res.status(403).json({"error":"Password should be 6 to 20 characters long with a numeric,1 lowercase and 1 uppercase letters"})
-//         }
-//     }
-
-//     bcrypt.hash(password, 10, async (error, hashedPassword)=>{
-//         let username = await generateUsername(email);
-
-//         const user = new User({
-//             personal_info:{
-//                 fullname, email, password:hashedPassword, username
-//             }
-//         })
-
-//         user.save().then((u)=>{
-//             return res.status(200).json(formatedData(u))
-//         }).catch((err)=>{
-//             if(err.code === 11000){
-//                 return res.status(500).json({"error":"Email already exists"})
-//             }
-//         })
-//     });
-// });
-
 server.post("/signup", async (req, res)=>{
     try {
         const {fullname, email, password} = req.body;
