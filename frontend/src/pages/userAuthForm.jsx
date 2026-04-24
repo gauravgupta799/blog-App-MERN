@@ -1,14 +1,69 @@
-import React from 'react'
+import React, {useState, useRef} from 'react'
 import Input from '../components/input';
 import googleIcon from "../imgs/google.png";
 import { Link } from 'react-router-dom';
 import AnimationWrapper from '../common/pageAnimation';
+import {Toaster, toast} from "react-hot-toast";
+import axios from "axios";
+
 
 function UserAuthForm({type}) {
+
+    const formRef = useRef();
+
+    const userAuthServer = async (serverRoute, formData)=>{
+        try {
+            const res = await axios.post(`http://localhost:3000${serverRoute}`, formData);
+            const result = await res.json(data);
+            console.log(result)
+            
+        } catch (error) {
+            console.log(error.message)
+        }
+
+    }
+
+    const handleSubmit =(e)=>{
+        e.preventDefault();
+
+        let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
+        let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
+
+        const form = new FormData(formRef.current)
+        let formData = {};
+
+        for(const [key, value] of form.entries()){
+            formData[key]= value;
+        }
+
+        let {fullname, email, password} = formData;
+
+        if(!fullname || !email || !password){
+            return toast.error("All field are required")
+        }
+        if(fullname){
+            if(fullname.trim().length < 3){
+                return toast.error("Fullname must be atleast 3 letters long")
+            }
+        }
+        if(!emailRegex.test(email)){
+            return toast.error("Email in invalid")
+        }
+        if(!passwordRegex.test(password)){
+            return toast.error("Password should be 6–20 characters long with at least 1 numeric, 1 lowercase, and 1 uppercase letter")
+        }
+
+        let serverRoute= type === "sign-in" ? "/signin" : "/signup";
+
+        userAuthServer(serverRoute, formData);
+    }
+
+
+
   return (
     <AnimationWrapper keyValue={type}>
         <section className='form-section h-cover flex flex-col items-center justify-center'>
-            <form className='form w-[96%] max-w-[420px] text-center mx-auto'>
+            <form className='form w-[96%] max-w-[420px] text-center mx-auto' ref={formRef}>
                 <h1 className="form-title text-4xl font-gelasio capitalize mb-4">
                 {type == "sign-in" ? "Welcome Back!" : "Join us today!"}
                 </h1>
@@ -16,8 +71,8 @@ function UserAuthForm({type}) {
                 {type === "sign-up" && (
                     <Input 
                         type="text" 
-                        name="name" 
-                        id="name" 
+                        name="fullname" 
+                        id="fullname" 
                         placeholder="Fullname" 
                         icon={"user"}
                     />
@@ -38,7 +93,7 @@ function UserAuthForm({type}) {
                     icon={"key"}
                 />
 
-                <button className="btn btn-dark center mt-14 capitalize">
+                <button type="submit" className="btn btn-dark center mt-14 capitalize" onClick={handleSubmit}>
                     {type.replace("-", " ")}
                 </button>
             </form>
@@ -70,6 +125,7 @@ function UserAuthForm({type}) {
                 </div>
             </div>
 
+             <Toaster/>
         </section>
     </AnimationWrapper>
   )
