@@ -9,16 +9,19 @@ import axios from "axios";
 
 function UserAuthForm({type}) {
 
-    const formRef = useRef();
+    // const formRef = useRef();
 
     const userAuthServer = async (serverRoute, formData)=>{
+        console.log(serverRoute)
         try {
             const res = await axios.post(`http://localhost:3000${serverRoute}`, formData);
-            const result = await res.json(data);
-            console.log(result)
+            // const result = await res.data;
+            console.log(res.data)
+            toast.success("User created successfully!")
             
-        } catch (error) {
-            console.log(error.message)
+        } catch ({res}) {
+            console.log(res);
+            // toast.error(error.message)
         }
 
     }
@@ -29,7 +32,7 @@ function UserAuthForm({type}) {
         let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
         let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
-        const form = new FormData(formRef.current)
+        const form = new FormData(formElement)
         let formData = {};
 
         for(const [key, value] of form.entries()){
@@ -38,9 +41,10 @@ function UserAuthForm({type}) {
 
         let {fullname, email, password} = formData;
 
-        if(!fullname || !email || !password){
-            return toast.error("All field are required")
-        }
+        // if(!fullname || !email || !password){
+        //     return toast.error("All field are required")
+        // }
+
         if(fullname){
             if(fullname.trim().length < 3){
                 return toast.error("Fullname must be atleast 3 letters long")
@@ -53,7 +57,7 @@ function UserAuthForm({type}) {
             return toast.error("Password should be 6–20 characters long with at least 1 numeric, 1 lowercase, and 1 uppercase letter")
         }
 
-        let serverRoute= type === "sign-in" ? "/signin" : "/signup";
+        let serverRoute = type === "sign-in" ? "/signin" : "/signup";
 
         userAuthServer(serverRoute, formData);
     }
@@ -63,7 +67,7 @@ function UserAuthForm({type}) {
   return (
     <AnimationWrapper keyValue={type}>
         <section className='form-section h-cover flex flex-col items-center justify-center'>
-            <form className='form w-[96%] max-w-[420px] text-center mx-auto' ref={formRef}>
+            <form className='form w-[96%] max-w-[420px] text-center mx-auto' id="formElement">
                 <h1 className="form-title text-4xl font-gelasio capitalize mb-4">
                 {type == "sign-in" ? "Welcome Back!" : "Join us today!"}
                 </h1>

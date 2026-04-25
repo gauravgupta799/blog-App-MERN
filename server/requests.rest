@@ -3,9 +3,14 @@ POST http://localhost:3000/signin
 Content-Type: application/json
 
 
+# {
+#     "email":"john@gmail.com",
+#     "password":"John123"
+# }
+
 {
     "email":"john@gmail.com",
-    "password":"John123"
+    "password":"John12"
 }
 
 

@@ -22,7 +22,7 @@ server.use(cors()); // enable to server access the data from any route
 mongoose.connect(process.env.MONGODB_URI, { autoIndex: true})
 
 const formatedData =(user)=>{
-    const access_token = jwt.sign({id: user._id}, process.env.PRIVATE_KEY)
+    const access_token = jwt.sign({id: user._id}, process.env.PRIVATE_KEY, { expiresIn: "7d" })
     return {
         profile_img: user.personal_info.profile_img,
         username:user.personal_info.username,
@@ -30,7 +30,6 @@ const formatedData =(user)=>{
         access_token
     }
 }
-
 
 const generateUsername = async (email)=>{
    let username = email.split("@")[0];
@@ -85,18 +84,28 @@ server.post("/signup", async (req, res)=>{
 
 
 // LOGIN ROUTE
-server.post("/signin", (req, res)=>{
-    const {email, password} = req.body;
+server.post("/signin", async (req, res)=>{
+    try {
+        const {email, password} = req.body;
 
-    User.findOne({"personal_info.email": email}).then(user => {
-        if(!user) res.status(403).json({"error":"Email not found"})
+        // Validation
+        if(!email || !password){
+            return res.status(400).json({error:"Email and password are required"})
+        }
+        const user = await User.findOne({"personal_info.email": email})
+        if(!user){
+            return res.status(404).json({"error":"Email not found"});  
+        }   
 
-        bcrypt.compare(password, user.personal_info.password, (err, success)=>{
-            if(err) res.status(403).json({"error":"Error occured while log in. Please try again!"})
-            success ? res.status(200).json(formatedData(user)) : res.status(403).json({"error":"Incorrect password"})
-        })
-    })
-})
+        const isMatched=  await bcrypt.compare(password, user.personal_info.password);
+        if(!isMatched) res.status(401).json({error:"Invalid email or password"})
+
+        return res.status(200).json(formatedData(user));
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error: "Something went wrong. Please try again."})
+    }
+});
 
 
 server.listen(port, ()=>{
