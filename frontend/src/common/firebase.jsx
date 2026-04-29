@@ -32,7 +32,7 @@ const analytics = getAnalytics(app);
 const provider = new GoogleAuthProvider();
 const auth = getAuth();
 
-export const authWithGoogle= async ()=>{
+export const authWithGoogle = async()=>{
     try {
         let user = null;
         const result = await signInWithPopup(auth, provider);

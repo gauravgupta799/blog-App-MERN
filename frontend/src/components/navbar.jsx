@@ -9,16 +9,13 @@ function Navbar() {
   const [searchVisible, setSearchVisible] = useState(false);
   const [isUserPanelVisible, setIsUserPanelVisible] = useState(false);
 
-    const {userAuth, userAuth:{access_token, profile_img}, setUserAuth} = useContext(userContext);
+  const {userAuth, userAuth:{access_token, profile_img}, setUserAuth} = useContext(userContext);
 
-    // const {access_token, profile_img} = userAuth;
-    // console.log(access_token, profile_img)
-
-    const handleBlur =()=>{
-      setTimeout(()=>{
-        setIsUserPanelVisible(false);
-      }, 200)
-    }
+  const handleBlur =()=>{
+    setTimeout(()=>{
+      setIsUserPanelVisible(false);
+    }, 200)
+  }
 
   return (
     <>
@@ -43,9 +40,9 @@ function Navbar() {
           onClick={()=> setSearchVisible(curr => !curr)}>
             <i className='fi fi-rr-search flex-none text-xl text-dark-grey p-0'></i>
           </button>
-          <Link to="/editor" className=' hidden md:flex gap-2 link'>
+          <Link to="/editor" className=' hidden md:flex gap-2 link border border-grey rounded-full'>
             <i className='fi fi-rr-file-edit'></i>
-            <p>Write</p>
+            <p>Write...</p>
           </Link>
 
           {

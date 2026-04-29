@@ -10,58 +10,52 @@ import { userContext } from '../App';
 import { authWithGoogle } from '../common/firebase';
 
 
+const baseUrl = "http://localhost:3000";
+
 function UserAuthForm({type}) {
     const {userAuth :{ access_token }, setUserAuth} = useContext(userContext);
     // console.log(access_token);
 
     const userAuthServer = async (serverRoute, formData)=>{
         try {
-            const res = await axios.post(`http://localhost:3000${serverRoute}`, formData);
+            const res = await axios.post(`${baseUrl}${serverRoute}`, formData);
             const data = res.data;
-
             storeSession("user", JSON.stringify(data));
             setUserAuth(data);
-
-            // console.log(sessionStorage, userAuth);
-            // toast.success("User created successfully!")
         } catch (error) {
-            console.log(error);
-            toast.error(error)
+            console.log(error.response?.data?.error);
+            toast.error(error.response?.data?.error || "Something went wrong");
         }
     }
 
     // Form Handle
-    const handleSubmit =(e)=>{
+    const handleSubmit = (e) =>{
         e.preventDefault();
-
         let serverRoute = type === "sign-in" ? "/signin" : "/signup";
 
         let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/; // regex for email
         let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/; // regex for password
 
-        const form = new FormData(formElement)
-        let formData = {};
+        // const form = new FormData(e.target);
+        const formData = Object.fromEntries(
+            [...new FormData(e.target.closest("form"))].map(([key, val]) => 
+                [key, typeof val === "string" ? val.trim() : val]
+            )
+        );
 
-        for(const [key, value] of form.entries()){
-            formData[key]= value;
+        const {fullname, email, password} = formData;
+
+        if(!email || !password || (type === "sign-up" && !fullname)){
+            return toast.error("All field are required")
         }
-
-        let {fullname, email, password} = formData;
-
-        // if(!fullname || !email || !password){
-        //     return toast.error("All field are required")
-        // }
-
-        if(fullname){
-            if(fullname.trim().length < 3){
-                return toast.error("Fullname must be atleast 3 letters long")
-            }
+        if(type === "sign-up" && fullname.trim().length < 3){
+            return toast.error("Fullname must be atleast 3 letters long")
         }
         if(!emailRegex.test(email)){
-            return toast.error("Email in invalid")
+            return toast.error("Invalid email format")
         }
         if(!passwordRegex.test(password)){
-            return toast.error("Password should be 6–20 characters long with at least 1 numeric, 1 lowercase, and 1 uppercase letter")
+            return toast.error("Password must be 6–20 chars, include uppercase, lowercase, and number")
         }
 
         userAuthServer(serverRoute, formData);
@@ -71,15 +65,16 @@ function UserAuthForm({type}) {
     const handleGoogleAuth = async (e) => {
         e.preventDefault();
         try {
-            const authResult = await authWithGoogle();
-            console.log(authResult);
-            
+            const user = await authWithGoogle();
+            const token = await user.getIdToken();
+            await userAuthServer("/google-auth", {
+                access_token:token,
+            });
         } catch (error) {
             console.log(error);
-            toast("Trouble Login Through Google");
+            toast.error("Trouble logging in through Google");
         }
     }
-
 
 
   return (
