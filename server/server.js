@@ -40,12 +40,7 @@ const s3 = new aws.S3({
 });
 
 const generateUploadImgUrl = async (fileType)=> {
-    const allowedTypes = [
-        "image/jpeg",
-        "image/jpg",
-        "image/png",
-        "image/webp"
-    ];
+    const allowedTypes = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
 
     if (!fileType || typeof fileType !== "string") throw new Error("Invalid file type");
     if(!allowedTypes.includes(fileType)) throw new Error("Only JPG, JPEG, PNG and WebP images are allowed")
