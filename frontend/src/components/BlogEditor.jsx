@@ -20,7 +20,7 @@ function BlogEditor() {
   useEffect(()=>{
     setTextEditor(new EditorJs({
       holder:"textEditor",
-      data:"",
+      data:content,
       tools:Tools,
       placeholder:"Let's write an awesome story"
     }))
@@ -125,6 +125,7 @@ function BlogEditor() {
           </div>
 
           <textarea 
+            defaultValue={title}
             ref={textareaRef}
             placeholder='Blog Title'
             className='text-2xl md:text-3xl xl:text-4xl  font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40'
