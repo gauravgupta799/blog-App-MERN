@@ -1,12 +1,35 @@
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import AnimationWrapper from "../common/pageAnimation";
 import {Toaster, toast} from "react-hot-toast";
 import { EditorContext } from '../pages/editor';
+import Tags from './Tags';
 
 function PublishForm() {
   let {blog, blog:{title, banner, desc, tags}, setEditorState, setBlog} = useContext(EditorContext);
 
   let characterLimit = 200;
+  let tagLimit = 10;
+
+  const handleTagKeyDown =(e)=>{
+    if(e.keyCode === 13 || e.keyCode === 188){
+      e.preventDefault();
+
+      let tag = e.target.value;
+
+      if(tags.length < tagLimit){
+        if(!tags.includes(tag) && tag.length){
+          setBlog({...blog, tags:[...tags, tag]});
+          e.target.value = "";
+        }else{
+          e.target.value = "";
+          toast.error(`${tag} already exits`);
+        }
+      }else{
+        e.target.value = "";
+        toast.error("You can add max 10 tags");
+      }
+    }
+  }
 
   return (
     <AnimationWrapper>
@@ -16,8 +39,8 @@ function PublishForm() {
             <i className='fi fi-br-cross'></i>
           </button>
 
-          <div className="preview-container max-w-[550] center">
-            <p className="text-dark-grey mb-1">Preview</p>
+          <div className="preview-container max-w-4xl center">
+            <p className="text-dark-grey mb-1">Blog Preview</p>
             <figure className="w-full aspect-video rounded-lg overflow-hidden bg-grey mt-4">
               <img src={banner} alt="banner-preview-image" className="img-fluid" />
             </figure>
@@ -25,7 +48,7 @@ function PublishForm() {
             <p className="font-gelasio line-clamp-2 text-xl leading-7 mt-4">{desc}</p>
           </div>
 
-          <div className="border-grey lg:border-1">
+          <div className="border-grey lg:border-1 ">
             <p className="tex-dark-grey mb2 mt-9 mb-2">Blog Title</p>
             <input 
               type="text" 
@@ -35,7 +58,7 @@ function PublishForm() {
               onChange={(e)=> setBlog({...blog, title:e.target.value})}
             />
 
-            <p className="tex-dark-grey mb2 mt-9">Short description about your blog</p>
+            <p className="tex-dark-grey mb-2 mt-9">Short description about your blog</p>
             <textarea 
               name="short-desc" 
               id="short-desc"
@@ -51,14 +74,31 @@ function PublishForm() {
               {characterLimit - desc.length} characters left
             </p>
 
-            <p className="mb-2 text-dark-grey text-sm">Topics - (Helps in searching and ranking the blog post)</p>
+            <p className="mb-2 mt-4 text-dark-grey text-sm">Topics - (Helps in searching and ranking the blog post)</p>
             <div className="relative input-box pl-2 pb-4">
-                <input 
-                  type="text" 
-                  placeholder='Topic'
-                  className="sticky input-box bg-white top-0 left-0 pl-4 mb-3 focus:bg-white" 
-                />
+              <input 
+                type="text" 
+                placeholder='Add your tags'
+                className="sticky input-box bg-white top-0 left-0 pl-4 mb-3 focus:bg-white"
+                onKeyDown={handleTagKeyDown} 
+              />
+              {
+                tags.map((tag, i)=> 
+                  <Tags 
+                    tag={tag} 
+                    targetIndex={i} 
+                    key={i}
+                  />
+                )
+              } 
             </div>
+            <p className="mt-1 text-dark-grey text-sm text-right">
+              {tagLimit - tags.length} Tags left
+            </p>
+
+            <button className="btn btn-dark px-8 mt-2">
+              Publish
+            </button>
 
           </div>
       </section>
