@@ -2,6 +2,6 @@
 
 .env
 
-request.rest
+requests.rest
 
 config/blog-website-mern-firebase-adminsdk.json

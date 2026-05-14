@@ -1,16 +1,23 @@
 # POST http://localhost:3000/signup 
-POST http://localhost:3000/signin
-Content-Type: application/json
-
+# POST http://localhost:3000/signin
+# Content-Type: application/json
 
 # {
 #     "email":"john@gmail.com",
-#     "password":"John123"
+#     "password":"John12"
 # }
 
+POST http://localhost:3000/create-blog
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMDYwZjc3MGFjYTZlOWQ3OWM2MjM4OCIsImlhdCI6MTc3ODc4MjA3MiwiZXhwIjoxNzc5Mzg2ODcyfQ.tTr8d311Yw_Ys2Ch2I-YE303jJC6rKgNRX6seuKsTTU
+
+
 {
-    "email":"john@gmail.com",
-    "password":"John12"
+    "title":"Test4 blog post",
+    "banner":"https://example.com/image-url",
+    "desc":"This is blog short desciption",
+    "content":{
+        "blocks":[1,2,3,4]
+    },
+    "tags":["tag1", "tag2", "tag3", "tag4"]
 }
-
-
