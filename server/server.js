@@ -285,5 +285,3 @@ server.post("/create-blog", verifyToken, (req, res)=>{
 server.listen(port, ()=>{
     console.log(`Running on port: ${port}`)
 });
-
-// http://localhost:3000/get-upload-url?fileType=image/jpg
