@@ -1,11 +1,17 @@
 import React, { useState, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AnimationWrapper from "../common/pageAnimation";
 import {Toaster, toast} from "react-hot-toast";
 import { EditorContext } from '../pages/editor';
 import Tags from './Tags';
+import { userContext } from '../App';
+import axios from "axios";
 
 function PublishForm() {
-  let {blog, blog:{title, banner, desc, tags}, setEditorState, setBlog} = useContext(EditorContext);
+  let {blog, blog:{title, banner, content, desc, tags}, setEditorState, setBlog} = useContext(EditorContext);
+  const {userAuth: {access_token}} = useContext(userContext);
+
+  const navigate = useNavigate();
 
   let characterLimit = 200;
   let tagLimit = 10;
@@ -29,6 +35,47 @@ function PublishForm() {
         toast.error("You can add max 10 tags");
       }
     }
+  }
+
+  const handlePublishBlog =(e)=>{
+    if(e.target.className.includes("disable")){
+      return;
+    }
+
+    if(!title.length){
+      return toast.error("Write blog title before publishing")
+    }
+    if(!desc.length || desc.length > characterLimit){
+      return toast.error(`Write a description about your blog withing ${characterLimit} characters to publish`)
+    }
+    if(!tags.length){
+      return toast.error("Add atlest 1 tag help to rank your blog")
+    }
+
+    let loadingToast = toast.loading("Publishing.....");
+    e.target.classList.add("disable");
+
+    let blogObj = {
+      title, banner, desc, content, tags, draft:false
+    }
+
+    axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/create-blog`, blogObj, {
+      headers:{
+        "Authorization": `Bearer ${access_token}`
+      }
+    }).then(()=>{
+      e.target.classList.remove("disable");
+      toast.dismiss(loadingToast);
+      toast.success("Published 👍");
+      setTimeout(()=>{
+        navigate("/");
+      }, 500);
+
+    }).catch(({response})=>{
+      e.target.classList.remove("disable");
+      toast.dismiss(loadingToast);
+      return toast.error(response.data.error);
+    })
   }
 
   return (
@@ -96,7 +143,7 @@ function PublishForm() {
               {tagLimit - tags.length} Tags left
             </p>
 
-            <button className="btn btn-dark px-8 mt-2">
+            <button className="btn btn-dark px-8 mt-2" onClick={handlePublishBlog}>
               Publish
             </button>
 
