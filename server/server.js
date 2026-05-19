@@ -234,6 +234,23 @@ const verifyToken = (req, res, next)=>{
     });
 }
 
+server.get("/latest-blogs",(req, res)=>{
+
+    let maxLimit= 5;
+
+    Blog.find({draft:false})
+    .populate("author", "personal_info.username personal_info.fullname personal_info.profile_img -_id")
+    .sort({"publishedAt": -1})
+    .select("blog_id title banner activity tags desc publishedAt -_id")
+    .limit(maxLimit)
+    .then((blogs)=>{
+        return res.status(200).json({blogs});
+    }).catch(error=>{
+        return res.status(500).json({error:error.message})
+    });
+
+});
+
 server.post("/create-blog", verifyToken, (req, res)=>{
     let authorId = req.user;
     let {title, desc, banner, tags, content, draft} = req.body;
