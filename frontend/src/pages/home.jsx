@@ -1,11 +1,22 @@
 import React from 'react'
+import AnimationWrapper from '../common/pageAnimation';
+import InpageNavigation from '../components/InpageNavigation';
 
-function home() {
+function Home() {
   return (
-    <div>
-      <h1 className="hero-title">This is Home Page</h1>
-    </div>
+    <AnimationWrapper>
+      <section className="h-cover flex justify-center gap-10">
+        <div className="latest-blog w-full">
+          <InpageNavigation routes={['home', "trending blogs"]} defaultHidden ={["trending blogs"]}>
+
+          </InpageNavigation>
+        </div>
+        {/* Filter & Tranding Blogs */}
+
+        
+      </section>
+    </AnimationWrapper>
   )
 }
 
-export default home;
+export default Home;

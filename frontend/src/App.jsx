@@ -1,5 +1,5 @@
 import Navbar from "./components/navbar";
-import Home from "./pages/home";
+import Home from "./pages/Home";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserAuthForm from "./pages/userAuthForm";
 import { createContext, useEffect, useState } from "react";
@@ -24,6 +24,7 @@ function App(){
                 <Routes>
                     <Route path='/editor' element={<Editor/>}/>
                     <Route path="/" element={<Navbar/>}>
+                        <Route index ="/" element={<Home/>} />
                         <Route path="signin" element={<UserAuthForm type="sign-in" />} />
                         <Route path="signup" element={<UserAuthForm type="sign-up" />} />
                     </Route>
