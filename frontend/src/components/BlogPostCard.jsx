@@ -1,30 +1,16 @@
 import React from 'react';
 import {Link} from "react-router-dom";
+import { getDay } from '../common/date';
 
 const BlogPostCard = ({blogContent, authorInfo}) => {
-  let months = ["Jan", "Feb", "March", "Apr", "May", "June", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  let days= ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-  
+
   const {
-      blog_id:id, 
-      title, author, desc, banner, publishedAt, tags,
-      activity:{total_likes}
+    blog_id:id, 
+    title, author, desc, banner, publishedAt, tags,
+    activity:{total_likes}
   } = blogContent;
 
   const {fullname, username, profile_img} = author.personal_info;
-  // console.log(author);
-
-  const getDay =(timeFrame)=>{
-    const date = new Date(timeFrame);
-    const day = days[date.getDay()];
-    const month = months[date.getMonth()];
-    const year = date.getFullYear();
-
-    const publishedTimeFrame = `${day.charAt(0).toUpperCase() + day.split("").slice(1).join("")}, ${date.getDate()} ${month} ${year}`
-    // console.log(date, day, month, date.getFullYear(), date.getDate())
-
-    return publishedTimeFrame;
-  }
 
   return (
     <Link to={`/blog/${id}`} className='flex items-center gap-8 border-b  pb-6 mb-8'>
