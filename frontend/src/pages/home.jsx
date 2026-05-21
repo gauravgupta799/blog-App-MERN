@@ -16,7 +16,7 @@ function Home() {
 
   const categories = [
     "programming", "tech", "finance", "travel",
-     "AI", "tools", "software", "gk"
+     "AI", "tools", "software", "tag1", "inpsection"
   ]
 
   const fetchLatestBlogs = async()=>{
@@ -41,6 +41,18 @@ function Home() {
     }
   }
 
+  const fetchBlogsByCategory = async ()=>{
+    try {
+      const res = await axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/search-blogs`, {tag: pageState});
+      const {blogs} = await res.data;
+      setLatestBlogs(blogs);
+      // console.log(blogs);
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   const handlepageState = (e)=>{
     let category = e.target.innerText.toLowerCase();
     setLatestBlogs(null);
@@ -52,7 +64,12 @@ function Home() {
   }
 
   useEffect(()=>{
-    if(pageState === "home") fetchLatestBlogs()
+    if(pageState === "home") {
+      fetchLatestBlogs()
+    }else{
+      fetchBlogsByCategory();
+    }
+
     if(pageState) fetchTrendingBlogs()
     activeTabRef.current.click();
 
