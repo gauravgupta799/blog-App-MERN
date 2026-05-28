@@ -6,6 +6,7 @@ import { createContext, useEffect, useState } from "react";
 import { lookInSession } from "./common/session";
 import Editor from "./pages/editor";
 import SearchPage from "./pages/SearchPage";
+import PageNotFound from "./pages/PageNotFound";
 
 
 export const userContext = createContext({});
@@ -29,6 +30,7 @@ function App(){
                         <Route path="signin" element={<UserAuthForm type="sign-in" />} />
                         <Route path="signup" element={<UserAuthForm type="sign-up" />} />
                         <Route path="search/:query" element={<SearchPage/>}/>
+                        <Route path="*" element={<PageNotFound/>}/>
                     </Route>
                 </Routes>
             </BrowserRouter>   
