@@ -276,8 +276,15 @@ server.get("/trending-blogs", (req, res)=>{
 });
 
 server.post("/search-blogs", (req, res)=>{
-    let {tag, page} = req.body;
-    let findQuery = {tags: tag, draft:false};
+    let {tag, query, page} = req.body;
+
+    let findQuery;
+    if(tag){
+        findQuery = {tags: tag, draft:false};
+    }else if(query){
+        findQuery = {draft:false, title: new RegExp(query, 'i')}
+    }
+
     let maxLimit = 2;
 
     Blog.find(findQuery)
@@ -295,8 +302,14 @@ server.post("/search-blogs", (req, res)=>{
 });
 
 server.post("/search-blogs-count", (req, res)=>{
-    let {tag} = req.body;
-    let findQuery = {tags: tag, draft:false};
+    let {tag, query} = req.body;
+
+    let findQuery;
+    if(tag){
+        findQuery = {tags: tag, draft:false};
+    }else if(query){
+        findQuery = {draft:false, title: new RegExp(query, 'i')}
+    }
 
     Blog.countDocuments(findQuery)
     .then((count)=>{
