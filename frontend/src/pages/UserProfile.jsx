@@ -4,6 +4,7 @@ import axios from "axios";
 import Loader from '../components/Loader';
 import AnimationWrapper from '../common/pageAnimation';
 import { userContext } from '../App';
+import AboutUser from '../components/AboutUser';
 
 
 const profileDataStructure ={
@@ -71,13 +72,19 @@ function UserProfile() {
                     <p className="text-xl capitalize h-6">{fullname}</p>
                     <p className="">{total_posts.toLocaleString()} Blogs - {total_reads.toLocaleString()} Reads</p>
 
-                    <div className="flex ga-4 mt-2">
-                    {
-                        profileId === profile_username ?
-                            <Link to="/setting/edit-profile" className="btn-light rounded-md">Edit Profile</Link>
-                        : ""
-                    }
+                    <div className="flex gap-4 mt-2">
+                        {
+                            profileId === username ?
+                                <Link to="/setting/edit-profile" className="btn-light rounded-md">Edit Profile</Link>
+                            : ""
+                        }
                     </div>
+                    <AboutUser 
+                        className ="max-md:hidden" 
+                        bio={bio} 
+                        socialLinks={social_links} 
+                        joinedAt={joinedAt}
+                    />
                 </div>
             </section>
         }
