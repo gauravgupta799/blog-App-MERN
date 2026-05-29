@@ -5,7 +5,7 @@ function Tags({ tag, targetIndex}) {
     let {blog, blog: { tags }, setBlog} = useContext(EditorContext);
 
     const handleTagDelete =()=>{
-        tags = tags.filter(t => t != tag);
+        tags = tags.filter(t => t !== tag);
         setBlog({...blog, tags});
     }
 
