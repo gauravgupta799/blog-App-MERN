@@ -334,6 +334,20 @@ server.post("/search-users", (req, res)=>{
     })
 })
 
+server.post("/get-user-profile", (req, res)=>{
+    const {username}= req.body;
+
+    User.findOne({"personal_info.username": username})
+    .select("-personal_info.password -google_auth -updatedAt -blogs")
+    .then(user=>{
+        return res.status(200).json(user);
+    })
+    .catch(error=> {
+        console.log(error.message);
+        return res.status(500).json({error:error.message})
+    })
+})
+
 server.post("/create-blog", verifyToken, (req, res)=>{
     let authorId = req.user;
     let {title, desc, banner, tags, content, draft} = req.body;

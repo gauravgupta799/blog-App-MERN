@@ -5,7 +5,7 @@ function UserCard({user}) {
     const {personal_info: {fullname, username, profile_img}} = user;
     
   return (
-    <Link to={`/user/${username}`} className="flex gap-5 items-center mv-5">
+    <Link to={`/user/${username}`} className="flex gap-5 items-center my-5">
         <img src={profile_img} alt={username} className="w-14 h-14 rounded-full" />
 
         <div className="">
