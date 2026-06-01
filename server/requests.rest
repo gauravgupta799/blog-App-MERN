@@ -7,17 +7,22 @@
 #     "password":"John12"
 # }
 
-POST http://localhost:3000/create-blog
+# POST http://localhost:3000/create-blog
+POST http://localhost:3000/get-blog
 Content-Type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMDYwZjc3MGFjYTZlOWQ3OWM2MjM4OCIsImlhdCI6MTc3ODc4MjA3MiwiZXhwIjoxNzc5Mzg2ODcyfQ.tTr8d311Yw_Ys2Ch2I-YE303jJC6rKgNRX6seuKsTTU
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjZhMDYwZjc3MGFjYTZlOWQ3OWM2MjM4OCIsImlhdCI6MTc3ODc4MjA3MiwiZXhwIjoxNzc5Mzg2ODcyfQ.tTr8d311Yw_Ys2Ch2I-YE303jJC6rKgNRX6seuKsTTU
 
+
+# {
+#     "title":"Test4 blog post",
+#     "banner":"https://example.com/image-url",
+#     "desc":"This is blog short desciption",
+#     "content":{
+#         "blocks":[1,2,3,4]
+#     },
+#     "tags":["tag1", "tag2", "tag3", "tag4"]
+# }
 
 {
-    "title":"Test4 blog post",
-    "banner":"https://example.com/image-url",
-    "desc":"This is blog short desciption",
-    "content":{
-        "blocks":[1,2,3,4]
-    },
-    "tags":["tag1", "tag2", "tag3", "tag4"]
+   "blog_id":"How-GitHub-engineers-tackle-platform-problemsLRAlH8HEGcDsdICa4FY1Z"
 }

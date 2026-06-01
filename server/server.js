@@ -401,6 +401,35 @@ server.post("/create-blog", verifyToken, (req, res)=>{
     })
 })
 
+server.post("/get-blog", async (req, res)=>{
+    try {
+        const {blog_id} = req.body;
+        let incrementVal=1;
+        console.log("Server", blog_id)
+        const blog = await Blog.findOneAndUpdate(
+            { blog_id }, 
+            { $inc: { "activity.total_reads": incrementVal }},
+            { new: true }
+        )
+        .populate("author", "personal_info.fullname personal_info.username personal_info.profile_img")
+        .select("title desc content banner activity publishedAt blog_id tags")
+        
+        if(!blog){
+            return res.status(404).json({error:"Blog not found"})
+        }
+        await User.findOneAndUpdate(
+            {"personal_info.username": blog.author.personal_info.username}, 
+            { $inc: {"account_info.total_reads":incrementVal}}
+        )
+
+        return res.status(200).json({blog})
+        
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error:error.message})
+    }
+})
+
 
 server.listen(port, ()=>{
     console.log(`Running on port: ${port}`)
