@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import AnimationWrapper from "../common/pageAnimation";
 import {Toaster, toast} from "react-hot-toast";
 import { EditorContext } from '../pages/editor';
@@ -10,6 +10,8 @@ import axios from "axios";
 function PublishForm() {
   let {blog, blog:{title, banner, content, desc, tags}, setEditorState, setBlog} = useContext(EditorContext);
   const {userAuth: {access_token}} = useContext(userContext);
+
+  const {blog_id} = useParams();
 
   const navigate = useNavigate();
 
@@ -59,7 +61,7 @@ function PublishForm() {
       title, banner, desc, content, tags, draft:false
     }
 
-    axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/create-blog`, blogObj, {
+    axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/create-blog`, {...blogObj, id:blog_id}, {
       headers:{
         "Authorization": `Bearer ${access_token}`
       }

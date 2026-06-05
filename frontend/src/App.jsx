@@ -27,6 +27,7 @@ function App(){
             <BrowserRouter>
                 <Routes>
                     <Route path='/editor' element={<Editor/>}/>
+                    <Route path='/editor/:blog_id' element={<Editor/>}/>
                     <Route path="/" element={<Navbar/>}>
                         <Route index ="/" element={<Home/>} />
                         <Route path="signin" element={<UserAuthForm type="sign-in" />} />

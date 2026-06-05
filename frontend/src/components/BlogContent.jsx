@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 const Img = ({url, caption})=>{
   return (
     <div>
@@ -26,10 +25,10 @@ const Quote =({quote, caption})=>{
 
 const List =({style, items})=>{
   return (
-    <ol className={`pl-5 ${style === "ordered" ? "list-decimal" : ""}`}>
+    <ol className={`pl-5 ${style === "ordered" ? "list-decimal" : "list-[circle]"}`}>
       {
         items.map((listItem, i) => {
-          return <li className="my-4" key={i} dangerouslySetInnerHTML={{__html:listItem}}></li>
+          return <li className="my-3" key={i} dangerouslySetInnerHTML={{__html:listItem}}></li>
         })
       }
     </ol>
@@ -38,30 +37,35 @@ const List =({style, items})=>{
 
 
 function BlogContent({block}) {
-  let { data: {text, style, items, level, file, caption}, type} = block;
-  
-  if(type==="paragraph"){ 
-    return <p className="" dangerouslySetInnerHTML={{__html:text}}></p> 
-  }
+  if(block.data){
+    let { data: {text, style, items, level, file, caption}, type} = block;
 
-  if(type==="header"){
-    if(level === 3){ 
-      return <h2 className="text-3xl font-bold" dangerouslySetInnerHTML={{__html:text}}></h2> 
+    if(type==="paragraph"){ 
+      return <p className="" dangerouslySetInnerHTML={{__html:text}}></p> 
     }
-    return <h2 className="text-4xl font-bold" dangerouslySetInnerHTML={{__html:text}}></h2>
+  
+    if(type==="header"){
+      if(level === 3){ 
+        return <h2 className="text-3xl font-bold" dangerouslySetInnerHTML={{__html:text}}></h2> 
+      }
+      return <h2 className="text-4xl font-bold" dangerouslySetInnerHTML={{__html:text}}></h2>
+    }
+  
+    if(type==="image"){ 
+      return <Img url={file.url} caption={caption}/>
+     }
+  
+    if(type==="quote"){ 
+      return <Quote quote={text} caption={caption}/>
+     }
+  
+    if(type==="list"){ 
+      return <List style={style} items={items}/>
+     }
+  }else{
+    console.log("Blog content is not written yet")
   }
-
-  if(type==="image"){ 
-    return <Img url={file.url} caption={caption}/>
-   }
-
-  if(type==="quote"){ 
-    return <Quote quote={text} caption={caption}/>
-   }
-
-  if(type==="list"){ 
-    return <List style={style} items={items}/>
-   }
+  
 }
 
 export default BlogContent;

@@ -58,7 +58,7 @@ function BlogPage() {
                 }
             )
             const data = res.data;
-            console.log(data.blogs);
+            // console.log(data.blogs);
 
             setSimilarBlogs(data.blogs);
 
