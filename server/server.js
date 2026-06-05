@@ -276,18 +276,18 @@ server.get("/trending-blogs", (req, res)=>{
 });
 
 server.post("/search-blogs", (req, res)=>{
-    let {tag, query, page, author} = req.body;
+    let {tag, query, page, author, limit, eliminate_blog} = req.body;
 
     let findQuery;
     if(tag){
-        findQuery = {tags: tag, draft:false};
+        findQuery = { tags: tag, draft:false, blog_id: { $ne: eliminate_blog } };
     }else if(query){
-        findQuery = {draft:false, title: new RegExp(query, 'i')}
+        findQuery = { draft:false, title: new RegExp(query, 'i') }
     } else if(author){
-        findQuery = {author, draft:false}
+        findQuery = { author, draft:false }
     }
 
-    let maxLimit = 2;
+    let maxLimit = limit ? limit : 2;
 
     Blog.find(findQuery)
     .populate("author", "personal_info.username personal_info.fullname personal_info.profile_img -_id")
@@ -405,7 +405,7 @@ server.post("/get-blog", async (req, res)=>{
     try {
         const {blog_id} = req.body;
         let incrementVal=1;
-        console.log("Server", blog_id)
+        // console.log("Server", blog_id)
         const blog = await Blog.findOneAndUpdate(
             { blog_id }, 
             { $inc: { "activity.total_reads": incrementVal }},

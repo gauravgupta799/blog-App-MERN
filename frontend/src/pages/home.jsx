@@ -48,7 +48,6 @@ function Home() {
       setTrendingBlogs(blogs);
     } catch (error) {
       console.log(error);
-      setIsError(error.message);
     }
   }
 
@@ -66,7 +65,6 @@ function Home() {
       setBlogs(formatedData);
     } catch (error) {
       console.log(error);
-      setIsError(error.message);
     }
   }
 
