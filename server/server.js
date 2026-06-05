@@ -12,6 +12,7 @@ import aws from "aws-sdk";
 // Schema
 import User from "./Schema/User.js";
 import Blog from "./Schema/Blog.js";
+import Notification from "./Schema/Notification.js"
 
 const serversAccountKey = JSON.parse(
     fs.readFileSync("./config/blog-website-mern-firebase-adminsdk.json", "utf-8")
@@ -449,6 +450,44 @@ server.post("/get-blog", async (req, res)=>{
     }
 })
 
+server.post("/like-blog", verifyToken, (req, res)=>{ 
+    const user_id = req.user; 
+    const {_id, isLikedByUser} = req.body; 
+    let incrementVal = isLikedByUser ? -1 : 1; 
+
+    Blog.findOneAndUpdate({_id}, { $inc: { "activity.total_likes": incrementVal } }) 
+    .then(blog =>{ 
+         if(!isLikedByUser){ 
+            let like = new Notification({ type:"like", blog:_id, notification_for: blog.author, user: user_id }) 
+            like.save().then(notification=>{ 
+                return res.status(200).json({"liked_by_user": true}) 
+            }) 
+            .catch(error=>{ return res.status(500).json({error:error.message}) }) 
+        }else{ 
+            Notification.findOneAndDelete({user:user_id, type:"like", blog:_id}) 
+            .then(data=>{ 
+                return res.status(200).json({"liked_by_user":false, data}) 
+            })
+            .catch((error)=>{ 
+                return res.status(500).json({error:error.message}) 
+            }) 
+        } 
+    }) 
+    .catch(error =>{ return res.status(500).json({error: error.message}) }) 
+})
+
+server.post("/isLiked-by-user", verifyToken, async (req, res)=>{
+    try {
+        const user_id = req.user;
+        const { _id } = req.body;
+        const result = await Notification.exists({user:user_id, type:"like", blog:_id})
+        return res.status(200).json({result})
+        
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({error:error.message});
+    }
+})
 
 server.listen(port, ()=>{
     console.log(`Running on port: ${port}`)

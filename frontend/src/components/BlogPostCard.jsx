@@ -10,6 +10,7 @@ const BlogPostCard = ({blogContent, authorInfo}) => {
     activity:{total_likes}
   } = blogContent;
 
+
   const {fullname, username, profile_img} = author.personal_info;
 
   return (
@@ -27,8 +28,8 @@ const BlogPostCard = ({blogContent, authorInfo}) => {
 
         <div className="flex gap-4 mt-7">
           <span className="btn-light py-1 px-4 text-sm">{tags[0]}</span>
-          <span className="ml-3 flex items-center gap-2 text-dark-grey">
-            <i className="fi fi-rr-heart text-xl"></i>
+          <span className={`ml-3 flex items-center gap-2`}>
+            <i className={`fi fi-rr-heart text-xl`}></i>
             {total_likes}
           </span>
         </div>
