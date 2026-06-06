@@ -13,6 +13,7 @@ import aws from "aws-sdk";
 import User from "./Schema/User.js";
 import Blog from "./Schema/Blog.js";
 import Notification from "./Schema/Notification.js"
+import Comment from "./Schema/Comment.js";
 
 const serversAccountKey = JSON.parse(
     fs.readFileSync("./config/blog-website-mern-firebase-adminsdk.json", "utf-8")
@@ -487,6 +488,73 @@ server.post("/isLiked-by-user", verifyToken, async (req, res)=>{
         console.log(error);
         return res.status(500).json({error:error.message});
     }
+})
+
+server.post("/add-comment", verifyToken, (req, res)=>{
+    const user_id = req.user;
+    const {_id, comment, replying_to, blog_author} = req.body;
+
+    if(!comment.length){
+        return res.status(403).json({error:"Write something to leave a comment"});
+    }
+
+    const commentObj = new Comment({
+        blog_id:_id,
+        blog_author,
+        comment, 
+        commented_by:user_id,
+        isReady:false,
+    })
+
+    commentObj.save().then((commentFile)=>{
+        const {comment, commentedAt, children } = commentFile;
+
+        Blog.findOneAndUpdate({ _id }, { $push: { "comments": commentFile._id }, $inc: { "activity.total_comments": 1, "activity.total_parent_comments": 1  } })
+        .then(blog=>{
+            console.log("New Comment Created")
+        })
+
+        let notificationObj = new Notification({
+            type:"comment",
+            blog:_id,
+            notification_for:blog_author,
+            user:user_id,
+            comment:commentFile._id
+        })
+
+        notificationObj.save().then((notification)=>{
+            console.log("New Notification Created");
+        })
+
+        return res.status(200).json({
+            comment, 
+            commentedAt, 
+            _id:commentFile._id,
+            user_id,
+            children
+        })
+    })
+
+})
+
+server.post("/get-blog-comments", (req, res)=>{
+    const {blog_id, skip} = req.body;
+    let maxLimit = 5;
+
+    Comment.find({ blog_id, isReply:false })
+    .populate("commented_by", "personal_info.username personal_info.fullname personal_info.profile_img")
+    .skip(skip)
+    .limit(maxLimit)
+    .sort({
+        "commentedAt": -1
+    })
+    .then(comment=>{
+        return res.status(200).json(comment)
+    })
+    .catch(error=>{
+        console.log(error.message);
+        return res.status(500).json({error: error.message})
+    })
 })
 
 server.listen(port, ()=>{

@@ -7,7 +7,7 @@ import { getDay } from '../common/date';
 import BlogInteraction from '../components/BlogInteraction';
 import BlogPostCard from '../components/BlogPostCard';
 import BlogContent from '../components/BlogContent';
-import CommentsContainer from "../components/CommentsContainer";
+import CommentsContainer, { fetchComments } from "../components/CommentsContainer";
 
 
 export const blogStructure = {
@@ -45,29 +45,35 @@ function BlogPage() {
 
     const fetchBlogDetail= async()=>{
         try {
-
             // fetch blog
             const response = await axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/get-blog`, { blog_id:id });
-            const {blog} = await response.data;
+            const {blog} = response.data;
+
+            // Fetch Comments
+            blog.comments = await fetchComments({
+                blog_id: blog._id, 
+                setParentCommentCountFun: setTotalParentsCommentsLoaded
+            })
+
             setBlogDetail(blog);
 
-             // Check if tags exist
-            if (!blog?.tags?.length) {
-                setLoading(false);
+            console.log("Blog Comment Data:", blog) 
+
+            // Stop if no tags are available
+            if (!blog.tags?.length) {
                 return;
             }
 
-            // fetch similar blog
+            // Fetch Similar Blogs
             const res = await axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/search-blogs`, {
                     tag: blog.tags[0], limit:6, eliminate_blog:id
                 }
             )
             const data = res.data;
-            // console.log(data.blogs);
-
             setSimilarBlogs(data.blogs);
 
         } catch (error) {
+            console.error("Error fetching blog details:", error);
              // More detailed debugging
             if (error.response) {
                 console.log("Server Response:", error.response.data);
