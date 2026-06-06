@@ -7,7 +7,7 @@ import axios from "axios";
 
 function BlogInteraction() {
 
-    let { blogDetail, setBlogDetail, isLikedByUser, setIsLikedByUser,
+    let { blogDetail, setBlogDetail, isLikedByUser, setIsLikedByUser,setCommentsWrapper,
         blogDetail: { _id, title, blog_id, activity, activity: { total_likes, total_comments},
             author:{ personal_info:{ username:author_username }}
         }
@@ -67,7 +67,9 @@ function BlogInteraction() {
                     </button>
                     <p className="text-xl text-dark-grey">{total_likes}</p>
 
-                    <button className="w-10 h-10 rounded-full bg-grey/80">
+                    <button 
+                        onClick = {()=> setCommentsWrapper(preVal => !preVal)}
+                        className="w-10 h-10 rounded-full bg-grey/80 hover:text-purple">
                         <i className="fi fi-rr-comment-dots"></i>
                     </button>
                     <p className="text-xl text-dark-grey">{total_comments}</p>
