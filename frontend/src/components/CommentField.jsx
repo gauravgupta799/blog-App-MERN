@@ -4,7 +4,7 @@ import { BlogContext } from '../pages/BlogPage';
 import {Toaster, toast} from "react-hot-toast";
 import axios from "axios";
 
-function CommentField({action}) {
+function CommentField({action, index = undefined, replyingTo = undefined, setReplying}) {
     const [comment, setComment] = useState("");
 
     const {userAuth: { access_token, username, fullname, profile_img }} = useContext(userContext);
@@ -31,22 +31,37 @@ function CommentField({action}) {
             }
             
             const {data} = await axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/add-comment`, 
-                {  _id, blog_author, comment },
+                {  _id,  blog_author, comment, replying_to: replyingTo },
                 {
                     headers:{
                         "Authorization": `Bearer ${access_token}`
                     }
                 }
             )    
-              
+
             setComment("");
 
             data.commented_by = { personal_info: { username, fullname, profile_img }}
             let newCommentArr;
 
-            data.childrenLevel = 0;
-            newCommentArr = [ data, ...commentArr ];
-            let parentCommentIncrementVal = 1;
+            if(replyingTo){
+                commentArr[index].children.push(data._id);
+                data.childrenLevel = commentArr[index].childrenLevel + 1;
+                data.parentIndex = index;
+                commentArr[index].isReplyLoaded = true;
+
+                commentArr.splice(index + 1, 0, data);
+
+                newCommentArr = commentArr;
+
+                setReplying(false);
+
+            } else{
+                data.childrenLevel = 0;
+                newCommentArr = [ data, ...commentArr ];
+            }
+
+            let parentCommentIncrementVal = replyingTo ? 0 : 1;
 
             setBlogDetail({
                 ...blogDetail, 

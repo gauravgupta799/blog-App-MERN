@@ -8,6 +8,7 @@ import BlogInteraction from '../components/BlogInteraction';
 import BlogPostCard from '../components/BlogPostCard';
 import BlogContent from '../components/BlogContent';
 import CommentsContainer, { fetchComments } from "../components/CommentsContainer";
+import Toaster from "react-hot-toast";
 
 
 export const blogStructure = {
@@ -102,70 +103,70 @@ function BlogPage() {
 
   return (
     <AnimationWrapper>
-    {
-        loading ? <Loader/> : 
-        <BlogContext.Provider value={{
-            blogDetail, setBlogDetail, isLikedByUser, setIsLikedByUser,
-            commentsWrapper, setCommentsWrapper, 
-            totalParentsCommentsLoaded, setTotalParentsCommentsLoaded
-        }}>
+        {
+            loading ? <Loader/> : 
+            <BlogContext.Provider value={{
+                blogDetail, setBlogDetail, isLikedByUser, setIsLikedByUser,
+                commentsWrapper, setCommentsWrapper, 
+                totalParentsCommentsLoaded, setTotalParentsCommentsLoaded
+            }}>
 
-            <CommentsContainer/>
+                <CommentsContainer/>
 
-            <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
-                <img src={banner} alt="" className="aspect-video" />
-                <div className="mt-12">
-                    <h2 className="blog-title">{title}</h2>
-                    <div className="flex max-sm:flex-col justify-between my-8">
-                        <div className="flex gap-5 items-center">
-                            <img src={profile_img} alt="author-profile-image" className="w-14 h-14 rounded-full" />
-                            <p className="capitalize">
-                                <strong className="text-xl">{fullname}</strong> <br />
-                                @<Link to={`/user/${author_username}`} className="underline">
-                                    {author_username}
-                                </Link>
+                <div className="max-w-[900px] center py-10 max-lg:px-[5vw]">
+                    <img src={banner} alt="" className="aspect-video" />
+                    <div className="mt-12">
+                        <h2 className="blog-title">{title}</h2>
+                        <div className="flex max-sm:flex-col justify-between my-8">
+                            <div className="flex gap-5 items-center">
+                                <img src={profile_img} alt="author-profile-image" className="w-14 h-14 rounded-full" />
+                                <p className="capitalize">
+                                    <strong className="text-xl">{fullname}</strong> <br />
+                                    @<Link to={`/user/${author_username}`} className="underline">
+                                        {author_username}
+                                    </Link>
+                                </p>
+                            </div>
+                            <p className="text-dark-grey opacity-75 max-sm:mt-6 max-sm:ml-12 max-sm:pl-5">
+                                Published on {getDay(publishedAt)}
                             </p>
                         </div>
-                        <p className="text-dark-grey opacity-75 max-sm:mt-6 max-sm:ml-12 max-sm:pl-5">
-                            Published on {getDay(publishedAt)}
-                        </p>
                     </div>
-                </div>
 
-                <BlogInteraction/>
+                    <BlogInteraction/>
 
-                <div className="my-12 font-gelasio blog-page-content">
-                    {
-                        content[0]?.blocks.map((block, i)=>{
-                            return (
-                                <div className="my-4 md:my-8" key={i}>
-                                    <BlogContent block={block}/>
-                                </div>
-                            )
-                        })
-                    }
-                </div>
-
-                <BlogInteraction/>
-
-                {
-                    similarBlogs !== null && similarBlogs.length ? 
-                    <>
-                        <h1 className="text-2xl my-12 font-medium">Similar Blogs</h1>
+                    <div className="my-12 font-gelasio blog-page-content">
                         {
-                            similarBlogs.map((sBlog, i)=>{
-                                const {author: {personal_info}} = sBlog;
-                                return <AnimationWrapper key={i} transition={{duration:1, delay:i*0.5}}>
-                                        <BlogPostCard blogContent ={sBlog} authorInfo={sBlog.author.personal_info}/>
-                                </AnimationWrapper>
+                            content[0]?.blocks.map((block, i)=>{
+                                return (
+                                    <div className="my-4 md:my-8" key={i}>
+                                        <BlogContent block={block}/>
+                                    </div>
+                                )
                             })
                         }
-                    </>
-                    : ""
-                } 
-            </div>
-        </BlogContext.Provider>
-    }
+                    </div>
+
+                    <BlogInteraction/>
+
+                    {
+                        similarBlogs !== null && similarBlogs.length ? 
+                        <>
+                            <h1 className="text-2xl my-12 font-medium">Similar Blogs</h1>
+                            {
+                                similarBlogs.map((sBlog, i)=>{
+                                    const {author: {personal_info}} = sBlog;
+                                    return <AnimationWrapper key={i} transition={{duration:1, delay:i*0.5}}>
+                                            <BlogPostCard blogContent ={sBlog} authorInfo={sBlog.author.personal_info}/>
+                                    </AnimationWrapper>
+                                })
+                            }
+                        </>
+                        : ""
+                    } 
+                </div>
+            </BlogContext.Provider>
+        }
 
     </AnimationWrapper>
   )
