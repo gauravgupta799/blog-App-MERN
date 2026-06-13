@@ -16,7 +16,7 @@ export const blogStructure = {
     banner:"",
     desc:"",
     content:[],
-    author:{personal_info: {}},
+    author:{ personal_info: {} },
     activity:"",
     publishedAt:""
 }
@@ -58,8 +58,7 @@ function BlogPage() {
 
             setBlogDetail(blog);
 
-            console.log("Blog Comment Data:", blog) 
-
+            // console.log(blogDetail)
             // Stop if no tags are available
             if (!blog.tags?.length) {
                 return;
@@ -98,8 +97,6 @@ function BlogPage() {
         setCommentsWrapper(false);
         setTotalParentsCommentsLoaded(0)
     }
-
-    // console.log(content[0]?.blocks)
 
   return (
     <AnimationWrapper>

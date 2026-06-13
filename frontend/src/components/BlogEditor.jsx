@@ -17,7 +17,7 @@ function BlogEditor() {
   const navigate = useNavigate();
   const {blog_id} = useParams();
 
-  let {blog:{title, banner, desc, content, tags, author}, 
+  const { blog: { title, banner, desc, content, tags, author }, 
     setBlog, blog, textEditor, setTextEditor, editorState, setEditorState
   } = useContext(EditorContext);
 
@@ -50,7 +50,6 @@ function BlogEditor() {
           if(url){
             toast.dismiss(loadingToast);
             toast.success("Image Uploaded");
-            // blogBannerRef.current.src = url;
             setBlog({...blog, banner:url})
           }
         }

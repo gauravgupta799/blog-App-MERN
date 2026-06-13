@@ -62,10 +62,7 @@ function BlogContent({block}) {
     if(type==="list"){ 
       return <List style={style} items={items}/>
      }
-  }else{
-    console.log("Blog content is not written yet")
   }
-  
 }
 
 export default BlogContent;

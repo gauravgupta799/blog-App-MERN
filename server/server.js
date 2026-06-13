@@ -507,6 +507,7 @@ server.post("/add-comment", verifyToken, (req, res)=>{
     }
     if(replying_to){
         commentObj.parent = replying_to;
+        commentObj.isReply = true;
     }
 
     new Comment(commentObj).save().then(async (commentFile)=>{
@@ -564,6 +565,95 @@ server.post("/get-blog-comments", (req, res)=>{
     })
     .catch(error=>{
         console.log(error.message);
+        return res.status(500).json({error: error.message})
+    })
+})
+
+server.post("/get-replies", (req,res)=>{
+    const {_id, skip} = req.body;
+    let maxLimit = 5;
+
+    Comment.findOne({ _id })
+    .populate({
+        path:"children",
+        option:{
+            limit:maxLimit,
+            skip:skip,
+            sort: { 'commentedAt': -1 }
+        },
+        populate:{
+            path: 'commented_by',
+            select:"personal_info.profile_img personal_info.fullname personal_info.username"
+        },
+        select:"-blog_id -updatedAt"
+    })
+    .select("children")
+    .then(doc =>{
+        return res.status(200).json({replies: doc.children})
+    })
+    .catch(error=>{
+        return res.status(500).json({error:error.message})
+    })
+});
+
+const deleteComments = (_id)=>{
+    Comment.findOneAndDelete({_id})
+    .then(comment =>{
+        if(comment.parent){
+            Comment.findOneAndUpdate({_id : comment.parent}, 
+                { $pull: { children: _id } }
+            )
+            .then(data => console.log("Comment delete from parent"))
+            .catch(error => console.log(error))
+        }
+
+        Notification.findOneAndDelete({ comment:_id })
+        .then(notification=>{
+            console.log("Comment notification deleted");
+        })
+
+        Notification.findOneAndDelete({ reply:_id })
+        .then(notification =>{
+            console.log("Reply notification deleted");
+        })
+
+        Blog.findOneAndUpdate({_id : comment.blog_id}, 
+            { 
+                $pull: { comments: _id }, 
+                $inc: { "activity.total_comments": -1 }, 
+                "activity.total_parent_comments": comment.parent ? 0 : -1
+            }
+        )
+        .then(blog =>{
+            if(comment.children.length){
+                comment.children.map(replies=>{
+                    deleteComments(replies);
+                });
+            }
+        })
+    })
+    .catch(error => {
+        console.log(error.message);
+    })
+}
+
+server.post("/delete-comment", verifyToken, (req, res)=>{
+    let user_id = req.user;
+    const { _id } = req.body;
+    
+    Comment.findOne({ _id })
+    .then(comment=>{
+        if(user_id === comment.commented_by || comment.blog_author){
+            deleteComments(_id);
+
+            return res.status(200).json({status:"done"});
+
+        }else{
+            return res.status(403).json({error: "You can not delete this comment"})
+        }
+    })
+    .catch(error=>{
+        console.log(error);
         return res.status(500).json({error: error.message})
     })
 })

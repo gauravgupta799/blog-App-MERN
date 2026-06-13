@@ -5,6 +5,7 @@ import {Toaster, toast} from "react-hot-toast";
 import axios from "axios";
 
 function CommentField({action, index = undefined, replyingTo = undefined, setReplying}) {
+
     const [comment, setComment] = useState("");
 
     const {userAuth: { access_token, username, fullname, profile_img }} = useContext(userContext);
@@ -14,7 +15,7 @@ function CommentField({action, index = undefined, replyingTo = undefined, setRep
             _id, 
             author: {_id: blog_author }, 
             comments, 
-            comments:{results: commentArr},
+            comments:{ results: commentsArr},
             activity,
             activity: { total_comments, total_parent_comments}
         } 
@@ -42,30 +43,30 @@ function CommentField({action, index = undefined, replyingTo = undefined, setRep
             setComment("");
 
             data.commented_by = { personal_info: { username, fullname, profile_img }}
-            let newCommentArr;
+            let newcommentArr;
 
             if(replyingTo){
-                commentArr[index].children.push(data._id);
-                data.childrenLevel = commentArr[index].childrenLevel + 1;
+                commentsArr[index].children.push(data._id);
+                data.childrenLevel = commentsArr[index].childrenLevel + 1;
                 data.parentIndex = index;
-                commentArr[index].isReplyLoaded = true;
+                commentsArr[index].isReplyLoaded = true;
 
-                commentArr.splice(index + 1, 0, data);
+                commentsArr.splice(index + 1, 0, data);
 
-                newCommentArr = commentArr;
+                newcommentArr = commentsArr;
 
                 setReplying(false);
 
             } else{
                 data.childrenLevel = 0;
-                newCommentArr = [ data, ...commentArr ];
+                newcommentArr = [ data, ...commentsArr ];
             }
 
             let parentCommentIncrementVal = replyingTo ? 0 : 1;
 
             setBlogDetail({
                 ...blogDetail, 
-                comments: { ...comments, results: newCommentArr }, 
+                comments: { ...comments, results: newcommentArr }, 
                 activity: { 
                     ...activity, 
                     total_comments: total_comments + 1, 
@@ -80,6 +81,7 @@ function CommentField({action, index = undefined, replyingTo = undefined, setRep
         }
     }
 
+    // console.log("commentsArray: ", commentsArr)
   return (
     <>
         <Toaster/>
