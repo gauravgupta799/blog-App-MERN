@@ -236,6 +236,46 @@ const verifyToken = (req, res, next)=>{
     });
 }
 
+server.post("/change-password", verifyToken, (req, res)=>{
+    console.log(req.body.formData);
+
+    let { currentPassword, newPassword } = req.body.formData;
+
+    if(!passwordRegex.test(currentPassword) || !passwordRegex.test(newPassword)){
+        return res.status(403).json({error:"Password must be 6–20 chars, include uppercase, lowercase, and number"})
+    }
+
+    User.findOne({_id: req.user})
+    .then((user)=>{
+        if(user.google_auth){
+            return res.status(403).json({error:"You've logged in with google account so you can't change the password"})
+        }
+
+        bcrypt.compare(currentPassword, user.personal_info.password, (error, result)=>{
+            if(error){
+                return res.status(500).json({error:"Some error occured while changing the password, please try again later"})
+            }
+            if(!result){
+                return res.status(403).json({error:"Incorrect current password"})
+            }
+
+            bcrypt.hash(newPassword, 10, (err, hashed_password)=>{
+                User.findOneAndUpdate({_id: req.user }, {"personal_info.password": hashed_password})
+                .then((u)=>{
+                    return res.status(200).json({status:"Password Changed"})
+                })
+                .catch(error=>{
+                    return res.status(500).json({error:"Some error occured while saving the new password"})
+                })
+            })
+        })
+    })
+    .catch(error=>{
+        console.log(error);
+        return res.status(500).json({error: "User not found"});
+    })
+})
+
 server.post("/latest-blogs",(req, res)=>{
     let {page} = req.body;
 

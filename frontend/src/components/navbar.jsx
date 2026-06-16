@@ -29,7 +29,7 @@ function Navbar() {
 
   return (
     <>
-      <nav className='navbar justify-between'>
+      <nav className='navbar justify-between z-50'>
         <Link to="/" className='flex-none w-10'>
           <img src={logo} alt="logo" className="img-fluid" loading="lazy"/>
         </Link>

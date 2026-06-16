@@ -9,6 +9,9 @@ import SearchPage from "./pages/SearchPage";
 import PageNotFound from "./pages/PageNotFound";
 import UserProfile from "./pages/UserProfile";
 import BlogPage from "./pages/BlogPage";
+import SideNavbar from "./components/SideNavbar";
+import ChangePassword from "./pages/ChangePassword";
+import EditProfile from "./pages/EditProfile";
 
 
 export const userContext = createContext({});
@@ -30,6 +33,12 @@ function App(){
                     <Route path='/editor/:blog_id' element={<Editor/>}/>
                     <Route path="/" element={<Navbar/>}>
                         <Route index ="/" element={<Home/>} />
+                        
+                        <Route path="settings" element={<SideNavbar/>}>
+                            <Route path="edit-profile" element={<EditProfile/>}/>
+                            <Route path="change-password" element={<ChangePassword/>}/>
+                        </Route>
+
                         <Route path="signin" element={<UserAuthForm type="sign-in" />} />
                         <Route path="signup" element={<UserAuthForm type="sign-up" />} />
                         <Route path="search/:query" element={<SearchPage/>}/>
