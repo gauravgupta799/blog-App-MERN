@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 
-function Input({type, id, name, placeholder, value, icon}) {
+function Input({type, id, name, placeholder, value, icon, disable=false}) {
     const [togglePassword, setTogglePassword] = useState(false);
 
   return (
@@ -12,6 +12,7 @@ function Input({type, id, name, placeholder, value, icon}) {
             placeholder={placeholder}
             defaultValue={value}
             className='input-box'
+            disabled={disable}
         />
         <i className={`fi fi-rr-${icon} input-icon`}></i>
         {

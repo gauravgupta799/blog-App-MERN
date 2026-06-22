@@ -1,6 +1,7 @@
 import axios from "axios";
 
 export const uploadImage = async (img)=>{
+    console.log("AWS: ", img)
     try {
         // Get signed upload URL from backend
         const {data: {uploadURL}} = await axios.get(`${import.meta.env.VITE_SERVER_DOMAIN}/get-upload-url?fileType=${img.type}`);

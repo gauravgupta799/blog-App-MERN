@@ -14,6 +14,7 @@ import User from "./Schema/User.js";
 import Blog from "./Schema/Blog.js";
 import Notification from "./Schema/Notification.js"
 import Comment from "./Schema/Comment.js";
+import { error } from "console";
 
 const serversAccountKey = JSON.parse(
     fs.readFileSync("./config/blog-website-mern-firebase-adminsdk.json", "utf-8")
@@ -393,6 +394,66 @@ server.post("/get-user-profile", (req, res)=>{
         return res.status(500).json({error:error.message})
     })
 })
+
+server.post("/update-profile-img", verifyToken, (req, res)=>{
+    const { url } = req.body;
+
+    User.findOneAndUpdate({_id: req.user}, { "personal_info.profile_img": url }).
+    then(()=>{
+        return res.status(200).json({profile_img: url });
+    })
+    .catch(err =>{
+        return res.status(500).json({error:err})
+    })
+});
+
+
+server.post("/update-profile", verifyToken, (req, res)=>{
+    const { username, bio, social_links } = req.body;
+
+    const bioLimit = 150;
+
+    if(username.length < 3){
+        return res.status(403).json({error:"Username should be at least 3 letters long"})
+    }
+    if(bio.length > bioLimit){
+        return res.status(403).json({error:`Bio should not more than ${bioLimit} characters`})
+    }
+
+    let socialLinksArr  = Object.keys(social_links);
+
+    try {
+        for(let i = 0; i < socialLinksArr.length; i++){
+            if(social_links[socialLinksArr[i]].length){
+                let hostname = new URL(social_links[socialLinksArr[i]]).hostname;
+
+                if(!hostname.includes(`${socialLinksArr[i].com}`) && socialLinksArr[i] !== "website"){
+                    return res.status(403).json({error:`${socialLinksArr[i]} link is invalid. You must enter a full url`})
+                }
+            }
+        }
+    } catch (error) {
+        return res.status(500).json({error:"You must provide full social links with http(s) included"})
+    }
+
+    const updateObj = {
+        "personal_info.username": username,
+        "personal_info.bio": bio,
+        social_links
+    }
+
+    User.findOneAndUpdate({ _id: req.user }, updateObj , { runValidators: true })
+    .then(()=>{
+        return res.status(200).json({username})
+    })
+    .catch(error=>{
+        if(error.code === 11000){
+            return res.status(409).json({error:"Username already taken"})
+        }
+        return res.status(500).json({error: error.message})
+    })
+  
+});
 
 server.post("/create-blog", verifyToken, (req, res)=>{
     let authorId = req.user;

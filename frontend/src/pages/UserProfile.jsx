@@ -13,7 +13,7 @@ import LoadMoreDataButton from '../components/LoadMoreDataButton';
 import PageNotFound from './PageNotFound';
 
 
-const profileDataStructure ={
+export const profileDataStructure ={
     personal_info:{
         fullname:"", username:"", profile_img:"", bio:""
     },
