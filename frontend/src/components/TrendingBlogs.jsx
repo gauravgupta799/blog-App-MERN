@@ -6,12 +6,12 @@ function TrendingBlogs({blog, index}) {
     const { 
         title, 
         blog_id:id, 
-        author:{personal_info: {fullname, username, profile_img}},
+        author:{ personal_info: { fullname, username, profile_img } },
         publishedAt
     } = blog;
 
   return (
-    <Link to={`/blog/${index}`} className="flex gap-5 mb-8">
+    <Link to={`/blog/${title}`} className="flex gap-5 mb-8">
       <h1 className='blog-index'>{index < 10 ? `0${index + 1}` : index}</h1>
       <div className="">
         <div className="flex gap-2 items-center mb-7">

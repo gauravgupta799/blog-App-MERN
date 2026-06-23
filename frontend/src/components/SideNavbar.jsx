@@ -1,10 +1,11 @@
 import React, {useContext, useState , useRef, useEffect} from 'react';
 import {Outlet, Navigate, NavLink} from "react-router-dom";
-import { userContext } from "../App"
+import { userContext } from "../App";
+import axios from "axios";
 
 function SideNavbar() {
     
-    const { userAuth: { access_token } } = useContext(userContext);
+    const {userAuth, setUserAuth, userAuth: { access_token, new_notification_available} } = useContext(userContext);
     
     let page = location.pathname.split('/')[2].replace("-", " ");
 
@@ -70,7 +71,13 @@ function SideNavbar() {
                         className="sidebar-link"
                         onClick={handlePageState}
                     >
-                        <i className="fi fi-rr-bell"></i>
+                        <div className="relative">
+                            <i className="fi fi-rr-bell"></i>
+                            { new_notification_available ? 
+                                <span className="absolute w-2 h-2 bg-red rounded-full top-0 right-0 z-10"></span>
+                                : ""
+                            }
+                        </div>
                          Notification
                     </NavLink>
                     <NavLink 

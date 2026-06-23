@@ -1,8 +1,9 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useEffect} from 'react';
 import logo from "../imgs/logo.png";
 import {Link, Outlet, useNavigate} from "react-router-dom";
 import { userContext } from '../App';
 import UserNavigation from './userNavigation';
+import axios from "axios";
 
 
 function Navbar() {
@@ -11,7 +12,7 @@ function Navbar() {
 
   const navigate = useNavigate();
 
-  const {userAuth, userAuth:{access_token, profile_img}, setUserAuth} = useContext(userContext);
+  const {userAuth, userAuth:{ access_token, profile_img, new_notification_available }, setUserAuth} = useContext(userContext);
 
   const handleBlur =()=>{
     setTimeout(()=>{
@@ -26,6 +27,24 @@ function Navbar() {
       e.target.value="";
     }
   }
+
+  useEffect(()=>{
+    if(access_token){
+      axios.get(`${import.meta.env.VITE_SERVER_DOMAIN}/new-notification`, {
+        headers:{
+          "Authorization": `Bearer ${access_token}`
+        }
+      })
+      .then(({ data })=>{
+        setUserAuth({ ...userAuth, ...data })
+      })
+      .catch(error=>{
+        console.log(error);
+      })
+      
+    }
+
+  },[access_token]);
 
   return (
     <>
@@ -62,6 +81,10 @@ function Navbar() {
                 <Link to="/dashboard/notification">
                   <button className="relative w-12 h-12 rounded-full bg-grey hover:bg-black/10">
                     <i className='fi fi-rr-bell text-xl flex-none'></i>
+                    { new_notification_available ? 
+                      <span className="absolute w-3 h-3 bg-red rounded-full top-2 right-2 z-10"></span>
+                      : ""
+                    }
                   </button>
                 </Link>
                 <div className="relative" 

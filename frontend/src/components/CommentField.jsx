@@ -91,7 +91,6 @@ function CommentField({action, index = undefined, replyingTo = undefined, setRep
             placeholder="Leave a comment..."
             className ="input-box pl-5 placeholder:text-dark-grey resize-none h-[150px] overflow-auto"
         >
-
         </textarea>
 
         <button 

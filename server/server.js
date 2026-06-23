@@ -413,7 +413,7 @@ server.post("/update-profile", verifyToken, (req, res)=>{
 
     const bioLimit = 150;
 
-    if(username.length < 3){
+    if(username.trim().length < 3){
         return res.status(403).json({error:"Username should be at least 3 letters long"})
     }
     if(bio.length > bioLimit){
@@ -427,7 +427,7 @@ server.post("/update-profile", verifyToken, (req, res)=>{
             if(social_links[socialLinksArr[i]].length){
                 let hostname = new URL(social_links[socialLinksArr[i]]).hostname;
 
-                if(!hostname.includes(`${socialLinksArr[i].com}`) && socialLinksArr[i] !== "website"){
+                if(!hostname.includes(`${socialLinksArr[i]}.com`) && socialLinksArr[i] !== "website"){
                     return res.status(403).json({error:`${socialLinksArr[i]} link is invalid. You must enter a full url`})
                 }
             }
@@ -437,7 +437,7 @@ server.post("/update-profile", verifyToken, (req, res)=>{
     }
 
     const updateObj = {
-        "personal_info.username": username,
+        "personal_info.username": username.trim(),
         "personal_info.bio": bio,
         social_links
     }
@@ -593,7 +593,7 @@ server.post("/isLiked-by-user", verifyToken, async (req, res)=>{
 
 server.post("/add-comment", verifyToken, (req, res)=>{
     const user_id = req.user;
-    const {_id, comment, replying_to, blog_author} = req.body;
+    const {_id, comment, replying_to, blog_author, notification_id } = req.body;
 
     if(!comment.length){
         return res.status(403).json({error:"Write something to leave a comment"});
@@ -633,6 +633,13 @@ server.post("/add-comment", verifyToken, (req, res)=>{
             .then((replyingToCommonDoc)=>{
                 notificationObj.notification_for = replyingToCommonDoc.commented_by
             })
+
+            if(notification_id){
+                Notification.findOneAndUpdate({ _id: notification_id }, { reply: commentFile._id })
+                .then(notification=>{
+                    console.log("Notification updated")
+                })
+            }
         }
 
         notificationObj.save().then((notification)=>{
@@ -713,7 +720,7 @@ const deleteComments = (_id)=>{
             console.log("Comment notification deleted");
         })
 
-        Notification.findOneAndDelete({ reply:_id })
+        Notification.findOneAndUpdate({ reply:_id }, { $unset: { reply :1 } })
         .then(notification =>{
             console.log("Reply notification deleted");
         })
@@ -758,6 +765,86 @@ server.post("/delete-comment", verifyToken, (req, res)=>{
         return res.status(500).json({error: error.message})
     })
 })
+
+server.get("/new-notification", verifyToken, (req, res)=>{
+    const user_id = req.user;
+
+    Notification.exists({ notification_for: user_id, seen: false, user: { $ne: user_id } })
+    .then(result=>{
+        if(result){
+            return res.status(200).json({ new_notification_available: true })
+        } else{
+            return res.status(200).json({ new_notification_available: false })
+        }
+    })
+    .catch(error=>{
+        console.log(error.message);
+        return res.status(500).json({ error: error.message });
+    })
+})
+
+server.post("/notifications", verifyToken, (req, res)=>{
+    const user_id = req.user;
+    const { page, filter, deletedDocCount } = req.body;
+
+    let maxLimit= 10;
+    
+    const findQuery = { notification_for:user_id, user: { $ne: user_id }}
+    const skipDocs = ( page - 1 ) * maxLimit;
+
+    if(filter !== "all"){
+        findQuery.type = filter;
+    }
+    if(deletedDocCount){
+        skipDocs -= deletedDocCount;
+    }
+
+    Notification.find(findQuery)
+    .skip(skipDocs)
+    .limit(maxLimit)
+    .populate("blog", "title blog_id")
+    .populate("user", "personal_info.fullname personal_info.username personal_info.profile_img")
+    .populate("comment", "comment")
+    .populate("replied_on_comment", "comment")
+    .populate("reply", "comment")
+    .sort({"createdAt": -1})
+    .select("createdAt type seen reply")
+    .then(notifications =>{
+        
+        Notification.updateMany(findQuery, { seen: true })
+        .skip(skipDocs)
+        .limit(maxLimit)
+        .then(()=>{
+            console.log("Notification seen")
+        })
+
+        return res.status(200).json({ notifications })
+    })
+    .catch(err=>{
+        console.log(err.message)
+        return res.status(500).json({error:err.message})
+    })
+});
+
+server.post("/all-notifications-count", verifyToken, (req, res)=>{
+    const user_id = req.user;
+    const {filter} = req.body;
+
+    let findQuery ={ notification_for: user_id, user:{$ne: user_id } }
+
+    if(filter !== "all"){
+        findQuery.type = filter;
+    }
+
+    Notification.countDocuments(findQuery)
+    .then(count=>{
+        return res.status(200).json({ totalDocs: count})
+    })
+    .catch(err=>{
+        console.log(err.message);
+        return res.status(500).json({error:err.message})
+    })
+});
 
 server.listen(port, ()=>{
     console.log(`Running on port: ${port}`)

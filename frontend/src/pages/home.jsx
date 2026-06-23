@@ -96,7 +96,7 @@ function Home() {
             <>
               {
                 blogs === null ? (<Loader/> ): (
-                  blogs.results.length ? blogs.results.map((blog, i)=>{
+                  blogs?.results.length ? blogs.results.map((blog, i)=>{
                     return (
                       <AnimationWrapper transition={{duration:1, delay:i * 0.2}} key={i}>
                         <BlogPostCard blogContent ={blog} authorInfo={blog.author.personal_info}/>
