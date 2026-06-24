@@ -78,7 +78,7 @@ function ChangePassword() {
                     placeholder="New Password"
                     icon="fi-rr-unlock"
                 />
-                <button className="btn-dark px-10" type="submit" onClick={handleSubmit}>
+                <button className="btn-dark px-12 mt-4" type="submit" onClick={handleSubmit}>
                     Change Password
                 </button>
 

@@ -259,7 +259,7 @@ function EditProfile() {
                     }
                   </div>
 
-                  <button className="btn-dark w-auto mx-auto px-10" type="submit" onClick={handleSubmit}>
+                  <button className="btn-dark w-auto mx-auto px-12 mt-8 flex" type="submit" onClick={handleSubmit}>
                     Update 
                   </button>
 

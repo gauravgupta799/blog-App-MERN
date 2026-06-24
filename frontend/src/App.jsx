@@ -14,6 +14,7 @@ import ChangePassword from "./pages/ChangePassword";
 import EditProfile from "./pages/EditProfile";
 import Dashboard from "./pages/Dashboard";
 import Notifications from "./pages/Notifications";
+import ManageBlogs from "./pages/ManageBlogs";
 
 
 export const userContext = createContext({});
@@ -42,6 +43,7 @@ function App(){
                         </Route>
 
                         <Route path="dashboard" element={<SideNavbar/>}>
+                            <Route path="blogs" element={<ManageBlogs/> }/>
                             <Route path="notification" element={<Notifications/> }/>
                         </Route>
 
