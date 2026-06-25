@@ -21,7 +21,7 @@ const serversAccountKey = JSON.parse(
 )
 
 const server = express();
-const port = 3000;
+const port = process.env.PORT || 5000;
 
 admin.initializeApp({
   credential: admin.credential.cert(serversAccountKey)
@@ -904,6 +904,6 @@ server.post("/delete-blog", verifyToken, (req, res)=>{
         return res.status(500).json({error: error.message})
     })
 })
-server.listen(port, ()=>{
+server.listen(port, "0.0.0.0", ()=>{
     console.log(`Running on port: ${port}`)
 });
