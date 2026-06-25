@@ -119,8 +119,8 @@ function BlogPage() {
                                 <img src={profile_img} alt="author-profile-image" className="w-14 h-14 rounded-full" />
                                 <p className="capitalize">
                                     <strong className="text-xl">{fullname}</strong> <br />
-                                    @<Link to={`/user/${author_username}`} className="underline">
-                                        {author_username}
+                                    <Link to={`/user/${author_username}`} className="underline hover:text-dark-grey">
+                                        @{author_username}
                                     </Link>
                                 </p>
                             </div>

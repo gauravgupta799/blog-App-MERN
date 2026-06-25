@@ -80,6 +80,7 @@ function ManageBlogs() {
         }
     }
 
+    // console.log(activeTab)
 
   return (
     <>

@@ -22,7 +22,7 @@ function InpageNavigation({children,routes, defaultHidden = [], defaultActiveInd
 
     useEffect(()=>{
 
-        if(windowWidth > 767 && inPageNavIndex !== defaultActiveIndex){
+        if(windowWidth > 767 && inPageNavIndex === defaultActiveIndex){
             changePageState(activeTabRef.current, defaultActiveIndex);
         }
 

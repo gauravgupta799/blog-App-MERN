@@ -129,14 +129,14 @@ function Home() {
           <div className="min-w-[40%] lg:min-w-[400px] max-w-min border-l border-grey pl-8 pt-3 max-md:hidden">
             <div className="flex flex-col gap-10">
               <div>
-                <h1 className="font-medium text-xl mb-8">Stroies from all interests</h1>
+                <h1 className="font-medium text-xl mb-8 capitalize">Stories from all interests</h1>
                 <div className="flex gap-3 flex-wrap">
                 {
                   categories.map((category, i)=>{
                     return (
                       <button 
                         key={i} 
-                        className={`tag ${pageState === category.toLowerCase() ? "bg-black text-white" : ""}`} 
+                        className={`tag hover:bg-black hover:text-white ${pageState === category.toLowerCase() && "bg-black text-white"}`} 
                         onClick={handlepageState}
                       >
                         {category}

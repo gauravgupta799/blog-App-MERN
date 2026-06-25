@@ -29,7 +29,6 @@ function App(){
 
     const [userAuth, setUserAuth] = useState({});
     const [theme, setTheme] = useState(()=> darkThemePreference() ? "dark" : "light");
-    // const [theme, setTheme] = useState("light");
 
     useEffect(()=>{
         const isUserInSession = JSON.parse(lookInSession("user"));

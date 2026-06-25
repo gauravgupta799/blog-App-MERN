@@ -37,7 +37,6 @@ function SideNavbar() {
         pageStateTab.current.click();
     },[pageState]);
     
-    // console.log(page)
 
   return (
     access_token === null ? <Navigate to ="/signin" /> :
@@ -81,7 +80,7 @@ function SideNavbar() {
                          Notification
                     </NavLink>
                     <NavLink 
-                        to="/dashboard/editor" 
+                        to="/editor" 
                         className="sidebar-link"
                         onClick={handlePageState}
                     >

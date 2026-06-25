@@ -14,7 +14,7 @@ const BlogPostCard = ({blogContent, authorInfo}) => {
   const {fullname, username, profile_img} = author.personal_info;
 
   return (
-    <Link to={`/blog/${id}`} className='flex items-center gap-8 border-b  pb-6 mb-8'>
+    <Link to={`/blog/${id}`} className='flex items-center gap-8 border-b pb-6 mb-8'>
       <div className='w-full'>
         <div className="flex gap-2 items-center mb-7">
           <img src={profile_img} alt={fullname} className="w-6 h-6 rounded-full" />
@@ -22,7 +22,7 @@ const BlogPostCard = ({blogContent, authorInfo}) => {
           <p className="min-w-fit">{getDay(publishedAt)}</p>
         </div>
 
-        <h1 className="blog-title">{title}</h1>
+        <h1 className="blog-title hover:text-dark-grey">{title}</h1>
 
         <p className="mt-3 text-xl font-gelasio leading-7 line-clamp-2 max-sm:hidden md:max-[1100px]:hidden">{desc}</p>
 

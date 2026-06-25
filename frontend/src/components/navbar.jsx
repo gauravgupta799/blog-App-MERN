@@ -90,7 +90,7 @@ function Navbar() {
             <p>Write...</p>
           </Link>
 
-          <button className=' bg-grey w-12 h-12 rounded-full flex items-center justify-center' onClick={handleChangeTheme}>
+          <button className=' bg-grey w-12 h-12 rounded-full flex items-center justify-center hover:bg-black/10' onClick={handleChangeTheme}>
             <i className={`fi fi-rr-${theme==="light" ? "moon-stars" : "sun"} flex-none text-2xl inline-flex`}></i>
           </button>
 

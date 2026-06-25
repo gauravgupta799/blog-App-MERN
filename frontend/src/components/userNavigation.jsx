@@ -30,7 +30,7 @@ function UserNavigation() {
             <Link to="/dashboard/blogs" className='link pl-8 py-4'>
                 Dashboard
             </Link>
-            <Link to="/settings/profile" className='link pl-8 py-4'>
+            <Link to="/settings/edit-profile" className='link pl-8 py-4'>
                 Settings
             </Link>
 

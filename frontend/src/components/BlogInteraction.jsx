@@ -63,13 +63,13 @@ function BlogInteraction() {
                     <button 
                         onClick ={handleLike}
                         className={`w-10 h-10 rounded-full flex items-center justify-center ${isLikedByUser ? "bg-red/20 text-red" : "bg-grey/80"}`}>
-                        <i className={`fi fi-${isLikedByUser ? "sr" : "rr"}-heart`}></i>
+                        <i className={`fi fi-${isLikedByUser ? "sr" : "rr"}-heart hover:text-dark-grey`}></i>
                     </button>
                     <p className="text-xl text-dark-grey">{total_likes}</p>
 
                     <button 
                         onClick = {()=> setCommentsWrapper(preVal => !preVal)}
-                        className="w-10 h-10 rounded-full bg-grey/80 hover:text-purple">
+                        className="w-10 h-10 rounded-full bg-grey/80 hover:text-dark-grey">
                         <i className="fi fi-rr-comment-dots"></i>
                     </button>
                     <p className="text-xl text-dark-grey">{total_comments}</p>
@@ -77,7 +77,7 @@ function BlogInteraction() {
 
                 <div className="flex gap-6 items-center">
                     {
-                        username === author_username && <Link to={`/editor/${blog_id}`} className="underline hover:text-purple">Edit</Link>
+                        username === author_username && <Link to={`/editor/${blog_id}`} className="underline hover:text-dark-grey">Edit</Link>
                     }
                     <Link to={`https://twitter.com/intent/tweet?text=Read ${title}&url=${location.href}`}>
                         <i className="fi fi-brands-twitter text-xl hover:text-twitter"></i>
