@@ -16,15 +16,23 @@ import Notification from "./Schema/Notification.js"
 import Comment from "./Schema/Comment.js";
 import { error } from "console";
 
-const serversAccountKey = JSON.parse(
-    fs.readFileSync("./config/blog-website-mern-firebase-adminsdk.json", "utf-8")
-)
+
+let serviceAccountKey;
+
+if(process.env.FIREBASE_SERVICE_ACCOUNT_KEY){
+    serviceAccountKey = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+}else{
+    serviceAccountKey = JSON.parse(
+        fs.readFileSync("./config/blog-website-mern-firebase-adminsdk.json", "utf-8")
+    )
+}
+
 
 const server = express();
 const port = process.env.PORT || 5000;
 
 admin.initializeApp({
-  credential: admin.credential.cert(serversAccountKey)
+  credential: admin.credential.cert(serviceAccountKey)
 });
 
 
