@@ -19,44 +19,65 @@ import ManageBlogs from "./pages/ManageBlogs";
 
 export const userContext = createContext({});
 
+export const ThemeContext = createContext({})
+
+const darkThemePreference =()=>{
+   return window.matchMedia("(prefers-color-scheme: dark)").matches;
+}
+
 function App(){
 
     const [userAuth, setUserAuth] = useState({});
+    const [theme, setTheme] = useState(()=> darkThemePreference() ? "dark" : "light");
+    // const [theme, setTheme] = useState("light");
 
     useEffect(()=>{
         const isUserInSession = JSON.parse(lookInSession("user"));
-        const result = isUserInSession ? setUserAuth(isUserInSession) : setUserAuth({access_token:null});
+        isUserInSession ? setUserAuth(isUserInSession) : setUserAuth({access_token:null});
+
+        let themeInSession = lookInSession("theme");
+
+        if(themeInSession){
+            setTheme(()=>{
+                document.body.setAttribute("data-theme", themeInSession);
+                return themeInSession;
+            })
+        }else{
+            document.body.setAttribute("data-theme", theme);
+        }
     },[]);
 
     return (
-        <userContext.Provider value={{userAuth, setUserAuth}}>
-            <BrowserRouter>
-                <Routes>
-                    <Route path='/editor' element={<Editor/>}/>
-                    <Route path='/editor/:blog_id' element={<Editor/>}/>
-                    <Route path="/" element={<Navbar/>}>
-                        <Route index ="/" element={<Home/>} />
-                        
-                        <Route path="settings" element={<SideNavbar/>}>
-                            <Route path="edit-profile" element={<EditProfile/>}/>
-                            <Route path="change-password" element={<ChangePassword/>}/>
-                        </Route>
+        <ThemeContext.Provider value={{theme, setTheme}}>
+            <userContext.Provider value={{userAuth, setUserAuth}}>
+                <BrowserRouter>
+                    <Routes>
+                        <Route path='/editor' element={<Editor/>}/>
+                        <Route path='/editor/:blog_id' element={<Editor/>}/>
+                        <Route path="/" element={<Navbar/>}>
+                            <Route index ="/" element={<Home/>} />
+                            
+                            <Route path="settings" element={<SideNavbar/>}>
+                                <Route path="edit-profile" element={<EditProfile/>}/>
+                                <Route path="change-password" element={<ChangePassword/>}/>
+                            </Route>
 
-                        <Route path="dashboard" element={<SideNavbar/>}>
-                            <Route path="blogs" element={<ManageBlogs/> }/>
-                            <Route path="notification" element={<Notifications/> }/>
-                        </Route>
+                            <Route path="dashboard" element={<SideNavbar/>}>
+                                <Route path="blogs" element={<ManageBlogs/> }/>
+                                <Route path="notification" element={<Notifications/> }/>
+                            </Route>
 
-                        <Route path="signin" element={<UserAuthForm type="sign-in" />} />
-                        <Route path="signup" element={<UserAuthForm type="sign-up" />} />
-                        <Route path="search/:query" element={<SearchPage/>}/>
-                        <Route path="user/:id" element={<UserProfile/>}/>
-                        <Route path="/blog/:id" element={<BlogPage/>}/>
-                        <Route path="*" element={<PageNotFound/>}/>
-                    </Route>
-                </Routes>
-            </BrowserRouter>   
-        </userContext.Provider>
+                            <Route path="signin" element={<UserAuthForm type="sign-in" />} />
+                            <Route path="signup" element={<UserAuthForm type="sign-up" />} />
+                            <Route path="search/:query" element={<SearchPage/>}/>
+                            <Route path="user/:id" element={<UserProfile/>}/>
+                            <Route path="/blog/:id" element={<BlogPage/>}/>
+                            <Route path="*" element={<PageNotFound/>}/>
+                        </Route>
+                    </Routes>
+                </BrowserRouter>   
+            </userContext.Provider>
+        </ThemeContext.Provider>
     )
 }
 

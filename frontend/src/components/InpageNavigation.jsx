@@ -57,7 +57,7 @@ function InpageNavigation({children,routes, defaultHidden = [], defaultActiveInd
                 })
             }
 
-            <hr className="absolute bottom-0 duration-300"  ref={activeTabLineRef}/>
+            <hr className="absolute bottom-0 duration-300 border-dark-grey"  ref={activeTabLineRef}/>
         </div>
 
         {

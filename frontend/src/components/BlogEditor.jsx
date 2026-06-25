@@ -1,15 +1,17 @@
 import React,{useContext, useEffect, useRef} from 'react'
 import { Link, useNavigate, useParams} from 'react-router-dom';
 import {Toaster, toast} from "react-hot-toast";
-import logo from "../imgs/logo.png";
+import darkLogo from "../imgs/logo-dark.png";
+import lightLogo from "../imgs/logo-light.png";
+import lightBanner from "../imgs/blog-banner-light.png";
+import darkBanner from "../imgs/blog-banner-dark.png";
 import AnimationWrapper from "../common/pageAnimation";
-import defaultBanner from "../imgs/blog-banner.png";
 import {uploadImage} from "../common/aws";
 import { EditorContext } from '../pages/editor';
 import EditorJs from "@editorjs/editorjs";
 import {Tools} from './Tools';
 import axios from "axios";
-import { userContext } from '../App';
+import { ThemeContext, userContext } from '../App';
 
 
 function BlogEditor() {
@@ -22,6 +24,7 @@ function BlogEditor() {
   } = useContext(EditorContext);
 
   const {userAuth: {access_token}} = useContext(userContext);
+  const {theme} = useContext(ThemeContext);
 
   useEffect(()=>{
     if(!textEditor.isReady){
@@ -131,7 +134,7 @@ function BlogEditor() {
     <>
     <nav className='navbar'>
       <Link to="/" className='flex-none w-10'>
-        <img src={logo} alt="logo" className="img-fluid" loading="lazy"/>
+        <img src={theme==="light"? darkLogo : lightLogo} alt="logo" className="img-fluid" loading="lazy"/>
       </Link>
       <p className="max-md:hidden text-black line-clamp-1 w-full">
         {title? title : "New Blog"}
@@ -150,8 +153,7 @@ function BlogEditor() {
           <div className="relative aspect-video bg-white border-4 border-grey hover:opacity-80">
             <label htmlFor="uploadBanner">
               <img 
-                // ref={blogBannerRef}
-                src={banner ? banner : defaultBanner} 
+                src={banner ? banner : theme ==="light"? lightBanner : darkBanner} 
                 alt="banner-preview" 
                 className='banner-preview z-20'
               />
@@ -170,7 +172,7 @@ function BlogEditor() {
             defaultValue={title}
             ref={textareaRef}
             placeholder='Blog Title'
-            className='text-2xl md:text-3xl xl:text-4xl  font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40'
+            className='text-2xl md:text-3xl xl:text-4xl  font-medium w-full h-20 outline-none resize-none mt-10 leading-tight placeholder:opacity-40 bg-white'
             onKeyDown={(e)=> e.keyCode === 13 && e.preventDefault()}
             onChange={handleBlogTitle}
           >
