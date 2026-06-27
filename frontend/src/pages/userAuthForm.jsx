@@ -14,7 +14,6 @@ const baseUrl = import.meta.env.VITE_SERVER_DOMAIN;
 
 function UserAuthForm({type}) {
     const {userAuth :{ access_token }, setUserAuth} = useContext(userContext);
-    // console.log(access_token);
 
     const userAuthServer = async (serverRoute, formData)=>{
         try {
@@ -81,7 +80,7 @@ function UserAuthForm({type}) {
     access_token ? <Navigate to="/" /> :
     <AnimationWrapper keyValue={type}>
         <section className='form-section h-cover flex flex-col items-center justify-center'>
-            <form className='form w-[96%] max-w-[420px] text-center mx-auto' id="formElement">
+            <form className=' form w-[96%] max-w-[420px] text-center mx-auto' id="formElement">
                 <h1 className="form-title text-4xl font-gelasio capitalize mb-4">
                 {type == "sign-in" ? "Welcome Back!" : "Join us today!"}
                 </h1>

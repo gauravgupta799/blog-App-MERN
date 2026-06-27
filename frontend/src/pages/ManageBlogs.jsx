@@ -38,11 +38,8 @@ function ManageBlogs() {
                 data_to_send:{ draft, query }
             });
 
-            if(draft){
-                setDrafts(formatedData);
-            } else{
-                setBlogs(formatedData);
-            }
+            draft ? setDrafts(formatedData) : setBlogs(formatedData)
+
         })
         .catch(err=>{
             console.log(err);
@@ -51,12 +48,8 @@ function ManageBlogs() {
 
     useEffect(()=>{
         if(access_token){
-            if(blogs===null){
-                getBlogs({page:1, draft:false})
-            }
-            if(drafts===null){
-                getBlogs({page:1, draft:true})
-            }
+            blogs === null && getBlogs({page:1, draft:false});
+            drafts === null && getBlogs({page:1, draft:true});
         }
 
     },[access_token, blogs, drafts, query])
@@ -80,7 +73,6 @@ function ManageBlogs() {
         }
     }
 
-    // console.log(activeTab)
 
   return (
     <>

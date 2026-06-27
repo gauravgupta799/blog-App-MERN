@@ -20,7 +20,6 @@ function SearchPage() {
         try {
             const response = await axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/search-blogs`, {query, page});
             const data = await response.data;
-            // console.log(data);
             let formatedData = await filterPaginationData({
                 state:blogs,
                 data:data.blogs,

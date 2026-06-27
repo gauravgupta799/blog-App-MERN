@@ -188,7 +188,7 @@ function EditProfile() {
                     </button>
                 </div>
 
-                <div className="w-full">
+                <div className="w-full px-4 sm:px-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 md:gap-5">
                       <div>
                         <Input
@@ -219,7 +219,7 @@ function EditProfile() {
                     placeholder="Username"
                     icon="fi fi-rr-at"
                   />
-                  <p className="text-dark-grey -mt-3">
+                  <p className="text-dark-grey -mt-3" style={{fontSize:"12px"}}>
                     Username will use to search user and will be visible to all user
                   </p>
 
@@ -234,7 +234,7 @@ function EditProfile() {
                     onChange={handleCharsLimit}
                   >
                   </textarea>
-                  <p className="mt-1 text-dark-grey">
+                  <p className="mt-1 text-dark-grey" style={{fontSize:"12px"}}>
                     {charsLeft} characters left
                   </p>
 

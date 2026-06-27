@@ -16,24 +16,24 @@ function SideNavbar() {
     let sidebarIconTab = useRef();
     let pageStateTab = useRef();
 
+    // Toggle Side Navbar
     const changePageState =(e)=>{
         let { offsetWidth, offsetLeft }  = e.target;
         activeTabLine.current.style.width = offsetWidth + "px";
         activeTabLine.current.style.left = offsetLeft + "px";
 
-        // e.target === sidebarIconTab.current ? setShowSideNav(true) : setShowSideNav(false);
         if(e.target === sidebarIconTab.current){
             setShowSideNav(!showSideNav);
         }
-        
     }
+
     const handlePageState =(e)=>{
         setPageState(e.target.innerText);
         setShowSideNav(false);
     }
 
     useEffect(()=>{
-        setPageState(false);
+        setPageState(page);
         pageStateTab.current.click();
     },[pageState]);
     
@@ -53,7 +53,7 @@ function SideNavbar() {
                     <hr className="absolute bottom-0 duration-500" ref={activeTabLine}/>
                 </div>
 
-                <div className={`min-w-[200px] h-[calc(100% - 80px - 64px)] md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px] bg-white max-md:w-[calc(100% + 80px)] max-md:px-16 max-md:-ml-7 duration-500 ${!showSideNav ? " max-md:opacity-0 max-md:pointer-events-none" : " opacity-100 pointer-events-auto"}` }>
+                <div className={`max-sm:h-[100vh] min-w-[200px] h-[calc(100% - 80px - 64px)] md:h-cover md:sticky top-24 overflow-y-auto p-6 md:pr-0 md:border-grey md:border-r absolute max-md:top-[64px] bg-white max-md:w-[70%] max-md:px-6 duration-500 ${!showSideNav ? " max-md:opacity-0 max-md:pointer-events-none" : " opacity-100 pointer-events-auto"}` }>
                     <h1 className="text-xl text-dark-grey mb-3">Dashboard</h1>
                     <hr className="border-grey -ml-6 mb-8 mr-6" />
 

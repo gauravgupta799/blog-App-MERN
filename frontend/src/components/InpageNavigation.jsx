@@ -3,7 +3,8 @@ import React, {useState, useRef, useEffect} from 'react';
 export let activeTabLineRef;
 export let activeTabRef;
 
-function InpageNavigation({children,routes, defaultHidden = [], defaultActiveIndex = 0}) {
+function InpageNavigation({children, routes, defaultHidden = [], defaultActiveIndex = 0}) {
+
     const [inPageNavIndex, setInPageNavIndex] = useState(defaultActiveIndex);
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const [isResizeEventAdded, setIsResizeEventAdded] = useState(false);
@@ -43,9 +44,7 @@ function InpageNavigation({children,routes, defaultHidden = [], defaultActiveInd
             {
                 routes.map((route, i)=>{
                     return (
-                        <button 
-                            ref={i === defaultActiveIndex ? activeTabRef : null }
-                            key={i}
+                        <button ref={i === defaultActiveIndex ? activeTabRef : null } key={i}
                             className={`${inPageNavIndex === i ?  "text-black" : "text-dark-grey"} p-4 px-5 capitalize
                                     ${defaultHidden.includes(route) ? " md:hidden" : " "}
                                 `}

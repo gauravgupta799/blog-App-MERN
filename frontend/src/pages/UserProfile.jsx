@@ -75,7 +75,6 @@ function UserProfile() {
             });
 
             formatedData.user_id = user_id;
-            // console.log(formatedData);
             setBlogs(formatedData);
             
         } catch (error) {

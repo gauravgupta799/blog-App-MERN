@@ -20,14 +20,13 @@ function Home() {
 
   const categories = [
     "programming", "tech", "finance", "travel",
-     "AI", "tools", "software", "tag1", "inpsection"
+     "AI", "software", "tools"
   ]
 
   const fetchBlogs = async({page = 1})=>{
     try {
       const response = await axios.post(`${import.meta.env.VITE_SERVER_DOMAIN}/latest-blogs`, {page});
       const data = await response.data;
-      // console.log(data);
       let formatedData = await filterPaginationData({
         state:blogs,
         data:data.blogs,
@@ -37,7 +36,6 @@ function Home() {
       setBlogs(formatedData);
     } catch (error) {
       console.log(error);
-      // toast.error(error.message)
     }
   }
 

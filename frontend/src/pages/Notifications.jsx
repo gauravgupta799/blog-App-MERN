@@ -60,7 +60,7 @@ function Notifications() {
   return (
     <div>
         <h1 className="max-md:hidden">Recent Notifications</h1>
-        <div className="my-8 flex gap-6">
+        <div className="my-8 flex flex-wrap gap-2 sm:gap-4 md:gap-6">
             {
                 filtersTab.map((filterTab, i)=>{
                     return <button 

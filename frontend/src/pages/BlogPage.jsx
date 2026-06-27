@@ -124,7 +124,7 @@ function BlogPage() {
                                     </Link>
                                 </p>
                             </div>
-                            <p className="text-dark-grey opacity-75 max-sm:mt-6 max-sm:ml-12 max-sm:pl-5">
+                            <p className="text-dark-grey opacity-75 max-sm:mt-4 max-sm:ml-12 max-sm:pl-5">
                                 Published on {getDay(publishedAt)}
                             </p>
                         </div>

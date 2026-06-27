@@ -34,7 +34,7 @@ export function ManagePublishedBlogCard({blog}) {
         <div className="flex gap-10 mb-6 border-b border-grey pb-6 items-center max:md:px-4">
             <img src={banner} alt="" className="max-md:hidden lg:hidden xl:block w-28 h-28 flex-none bg-grey object-cover" />
 
-            <div className="flex flex-col justify-between py-2 w-full min-w-[500px]">
+            <div className="flex flex-col justify-between py-2 w-full">
                 <div className="">
                     <Link to={`/blog/${blog_id}`} className="blog-title mb-4 hover:underline">
                         {title}
