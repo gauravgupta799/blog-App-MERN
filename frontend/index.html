@@ -2,11 +2,57 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="./src/imgs/logo-light.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Bloggin Website</title>
+    <title>Blogging Website</title>
   </head>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    #initial-loader {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #000;
+      z-index: 99999;
+      transition: opacity .4s ease;
+    }
+
+    .hide-loader {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader-logo {
+      max-width: 100%;
+      height: auto;
+      width: 96px;
+      height: 96px;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: .7;
+      }
+
+      50% {
+        transform: scale(1.08);
+        opacity: 1;
+      }
+    }
+  </style>
   <body>
+    <div id="initial-loader">
+      <img src="./src/imgs/logo-light.png" class="loader-logo" alt="Logo">
+  </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
